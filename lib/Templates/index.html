@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    metal:define-macro="main"
+>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <title>Hour logging</title>
+
+    <link type="text/css" rel="stylesheet" href="_/jquery/themes/base/ui.all.css" tal:attributes="href string:${sBaseUrl}_/jquery/themes/base/ui.all.css"/>
+    <link type="text/css" rel="stylesheet" href="_/fcbk.css" tal:attributes="href string:${sBaseUrl}_/fcbk.css"/>
+    <link type="text/css" rel="stylesheet" href="_/base.css" tal:attributes="href string:${sBaseUrl}_/base.css"/>
+    <style type="text/css">
+        .TimeLog .Job,
+        ul.holder li.Job,
+        .facebook-auto ul li.Job {
+            background-color: #80D386; /* green */
+        }
+        .facebook-auto ul li.Job.auto-focus {
+            background-color: #4E8051; /* green dark */
+        }
+
+        .TimeLog .Project,
+        ul.holder li.Project,
+        .facebook-auto ul li.Project {
+            background-color: #809DD3; /* blue */
+        }
+        .facebook-auto ul li.Project.auto-focus {
+            background-color: #4E5F80; /* blue dark */
+        }
+
+
+        .TimeLog .Task,
+        ul.holder li.Task,
+        .facebook-auto ul li.Task {
+            background-color: #D38080; /* red */
+        }
+        .facebook-auto ul li.Task.auto-focus {
+            background-color: #804E4E; /* red dark */
+        }
+
+
+        .TimeLog .User,
+        ul.holder li.User,
+        .facebook-auto ul li.User {
+            background-color: #F4F59C; /* yellow */
+        }
+        .facebook-auto ul li.User.auto-focus {
+            background-color: #97993D; /* yellow dark */
+        }
+
+
+        .TimeLog .Group,
+        ul.holder li.Group,
+        .facebook-auto ul li.Group {
+            background-color: #DFACFF; /* purple */
+        }
+        .facebook-auto ul li.Group.auto-focus {
+            background-color: #A9649D; /* purple dark */
+        }
+
+        .TimeLog .Time,
+        ul.holder li.Time,
+        .facebook-auto ul li.Time {
+            background-color: gray;
+        }
+        .facebook-auto ul li.Time.auto-focus {
+            background-color: darkgray;
+        }
+
+        .TimeLog .Ticket,
+        ul.holder li.Ticket,
+        .facebook-auto ul li.Ticket {
+            color: #FFF;
+            text-indent: 18px;
+            background:url("../../_/IconAppTypeJira.png") no-repeat #147;
+        }
+        .facebook-auto ul li.Ticket.auto-focus {
+            background-color: #035;
+        }
+
+        #test .facebook-auto ul li.auto-focus em {
+            background-color: gray;
+        }
+        .facebook-auto ul li.auto-focus:after {content:''}
+        .facebook-auto ul li:after {
+            color:#EEE;
+            content: attr(class);
+            float:right;
+        }
+        .facebook-auto ul li.User:after {
+            color:#AAA;
+        }
+
+        .TimeLog .Meta,
+        ul.holder li.Meta,
+        .facebook-auto ul li.Meta {
+            display:none;
+        }
+
+
+        form {
+            position: relative;
+        }
+        button {
+            float: left;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+        }
+
+        .TimeLog .time {
+            border: none;
+            color: #000;
+        }
+
+        .TimeLog li {
+            list-style: none;
+            clear: left;
+        }
+
+        .legend {
+            margin-bottom: 3em;
+        }
+        .TimeLog li span,
+        .legend li {
+            margin: 0.1em;
+            padding: 0.1em 0.5em;
+            position: relative; float: left; border: 1px solid;
+            -moz-border-radius: 0.75em;
+            border-radius: 0.75em;
+            clear: none;
+            color: #666;
+        }
+
+        #tabs .TimeLog {
+            width: 100%;
+        }
+
+        .nav {
+            position: absolute;
+            top: 4em;
+            font-weight: bolder;
+            text-decoration: none;
+            border: 1px solid gray;
+            padding: 0;
+            margin: 0 -24em;
+            -moz-border-radius: 1em;
+            border-radius: 1em;
+            background-color: white;
+            color: black;
+            height: 1.25em;
+            width: 1.25em;
+            text-align: center;
+        }
+        .nav:hover {
+            color: white;
+            background-color: black;
+        }
+        .previous {left: 50%;}
+        .next {right: 50%;}
+    </style>
+
+    <script type="text/javascript" src="_/jquery/jquery-1.4.1.min.js" tal:attributes="src string:${sBaseUrl}_/jquery/jquery-1.4.1.min.js"></script>
+    <script type="text/javascript" src="_/jquery/ui/jquery-ui-1.7.2.js" tal:attributes="src string:${sBaseUrl}_/jquery/ui/jquery-ui-1.7.2.js"></script>
+    <script type="text/javascript" src="_/jquery.fcbkcomplete_2.6.1" tal:attributes="src string:${sBaseUrl}_/jquery.fcbkcomplete_2.6.1"></script>
+    <script type="text/javascript">
+        (function($) {
+            $.fn.extend({
+                tallyTime : function(){
+                    var total =
+                    {
+                        h:0
+                        ,m:0
+                        ,s:0
+                        , parse : function(){
+                        this.m += Math.floor(this.s / 60);
+                        this.s = Math.ceil(this.s % 60);
+                        this.h += Math.floor(this.m / 60);
+                        this.m = Math.ceil(this.m % 60);
+
+                        return this.h + ':' + this.m + ':' + this.s;
+                    }
+                        , add :  function(sTime){
+                        // console.log('Add ' + sTime + ' to total.');
+                        var $parts = sTime.split(':');
+                        total.h += parseInt($parts[0], 10);
+                        total.m += parseInt($parts[1], 10);
+                        total.s += parseInt($parts[2], 10);
+                    }
+                    }
+                            , className = 'totalTime'
+                            , text
+                            ;
+                    $(this).children(':visible').each(function() {
+                        text = $(this).find('.time').text();
+                        if(text){
+                            total.add(text);
+                        }
+                    });
+                    var $totalTime = $(this).find('.' + className);
+                    if($totalTime.length === 0){
+                        // console.log('Create total Node and set to ' + total.parse());
+                        $(this).append('<li class="'+className+'">Total: ' + total.parse() + '</li>');
+                    }else{
+                        // console.log('Update total Node to ' + total.parse());
+                        $totalTime.html(total.parse());
+                    }
+                    // append total after node
+                    return this;
+                }
+            });
+
+            $.fn.extend({
+                filterFor: function(listSelector, options) {
+                    var  defaultOptions = {
+                        callback: function(){}
+                        , showClassName : ''
+                    }
+                            , $list = $(listSelector)
+                        // The list with keys to skip (esc, arrows, return, etc)
+                        // 8 is backspace, you might want to remove that for better usability
+                            , keys = [ 13, 27, 32, 37, 38, 39, 40 /*,8*/ ]
+                            ;
+
+                    options = $.extend(defaultOptions, options);
+
+                    return this.each(function(index, element) {
+                        var $element = $(element);
+                        if ($list.length !== 0) {
+                            $element.bind('keyup', function (e) {
+                                if ($.inArray(e.keyCode, keys) != 0) {
+                                    $list.tallyTime();
+                                    $list.children().each(function () {
+                                        var $this = $(this);
+                                        if ($this.find(':contains("' + $element.attr('value') + '")').length > 0 || $this.hasClass(options.showClassName)) {
+                                            $this.show();
+                                        } else {
+                                            $this.hide();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        })(jQuery);
+
+
+        $(document).ready(function() {
+            $tags = $("#tags");
+            if($tags.length > 0){
+                $tags.fcbkcomplete({
+                    json_url: "${sBaseUrl}tags/",
+                    cache: true,
+                    filter_case: false,
+                    filter_hide: true,
+                    firstselected: true,
+                    filter_selected: true,
+                    newel: true
+                });
+
+                $("input")[0].focus();
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <h1><a href="../../" tal:attributes="href string:${sBaseUrl}">Hour logging</a></h1>
+    <p tal:condition="exists:sMessage" tal:content="string:Error: ${sMessage}" class="warn no-numbering"
+    >Error: ${sMessage}</p>
+
+<tal:block metal:define-slot="content">
+</tal:block>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Ignore any file named foo.txt.
+3rd-party
+logs/*
+
+# PhpStorm Folder
+.idea
+
+# Personal Settings
+settings.xml
+credentials.xml
+Predefined.tags.json

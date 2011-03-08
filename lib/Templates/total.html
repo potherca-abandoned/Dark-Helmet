@@ -1,0 +1,28 @@
+<html
+    tal:omit-tag="true"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+>
+    <tal:block
+        tal:condition="exists:sTotals"
+        metal:use-macro="index.html/main"
+    >
+        <div class="page"
+             metal:fill-slot="content"
+        >
+            <h2>Overall Totals
+                <span class="small">
+                    from <tal:block content="sFrom" />
+                    to   <tal:block content="sTo" />
+                </span>
+            </h2>
+            <input name="filter" id="filter" type="text" />
+            <tal:block content="structure sTotals" />
+
+            <script>
+                $('#filter').filterFor('.TimeLog', {showClassName: 'totalTime'});
+                $('.TimeLog').tallyTime();
+            </script>
+        </div>
+    </tal:block>
+</html>

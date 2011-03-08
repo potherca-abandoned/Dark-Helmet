@@ -1,0 +1,176 @@
+@CHARSET "UTF-8";
+/*-----------------------------------------------------------*\
+ *                           INDEX                           *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+ *      1. TAG STYLES
+ *      2. GENERAL STYLES
+ *      3. CLASSES
+ *      4. HELPER CLASSES
+ *-----------------------------------------------------------*
+ *      BLUE        #0558A8
+ *      LIGHT BLUE  #CCCCFF
+ *      GREEN       #94AB2F
+ *
+ *      WHITE       #FFFFFF
+ *      LIGHT GREY  #999999
+ *      GREY        #666666
+ *      BLACK       #000000
+\*-----------------------------------------------------------*/
+
+
+/*         TAG STYLES
+**************************************************************/
+body {
+    background-color: #F7F7F7;
+    color: #333333;
+    font-family: Arial, sans-serif;
+    font-size: 1em;
+    margin: 0 auto 50pt;
+    width: 40em;
+}
+
+	a {
+	    color: #94AB2F;
+	    border-bottom: 1px solid #94AB2F;
+	    text-decoration: none;
+	}
+
+	a:hover {
+	    border-bottom-color: #0558A8;
+	}
+
+    code {
+        white-space: pre; /* nowrap? */
+        background-color: #FFC;
+        color: #333;
+        font-weight: normal;
+        text-decoration: none;
+        margin: 0;
+        padding: 0 4pt;
+        border: 1px solid #EEE;
+    }
+
+	dd {}
+	dl {}
+	dt {
+	    font-weight:bold;
+	    margin-top:1em;
+	}
+
+
+    h1 {
+	    color: #999;
+	    font-size: 20pt;
+	    position: fixed;
+	    right: 10pt;
+	    text-align: right;
+	    top: 10pt;
+	}
+
+
+	h2,h3,h4,h5,h6 {
+		background-color:#FFFFFF;
+		border-bottom:1px solid;
+		border-left:1px dotted;
+		border-top:1px solid;
+		color:#0558A8;
+		margin-right: 15em;
+		padding:0 0.5em;
+		width:auto;
+	}
+    h2 {font-size: 20pt; margin-left: -6em;}
+    h3 {font-size: 14pt; margin-left: -4em;}
+    h4 {font-size: 12pt; margin-left: -2em;}
+    h5 {font-size: 12pt; margin-left: -1em;}
+
+	li {
+	    font-size: 10pt;
+	}
+
+
+	p {
+	    text-align: justify;
+	}
+
+	ol {list-style-type: upper-roman; }
+
+/*         GENERAL STYLES
+**************************************************************/
+    h1 a {
+        color: #999;
+    }
+
+    h1 span {
+        font-size: 18pt;
+        color: #666;
+
+        display: block;
+    }
+
+    ol ol {list-style-type: decimal; }
+    ol ol ol {list-style-type: lower-alpha; }
+    ol ol ol ol {list-style-type: decimal; }
+
+
+/*         CLASSES
+**************************************************************/
+    .company {
+        font-family:"Trebuchet MS","Verdana",sans-serif;
+        margin-bottom:1em;
+        text-align:right;
+    }
+
+
+/*         HELPER CLASSES
+**************************************************************/
+    pre code,
+    .block {
+        display: block;
+        margin: 1em;
+        padding: 10pt;
+        width: auto;
+    }
+
+    .date{
+        font-size: 8pt;
+        text-align: right;
+    }
+
+	.main,
+	.important {
+	    font-weight: bold;
+	}
+
+    .small {
+        font-size: 8pt;
+    }
+
+    .page{
+        background-color: #FFF;
+        border: 1px dotted;
+        margin: 0 -2em 1em;
+        padding: 0 2em 2em;
+    }
+
+.alert {
+    background: #fff6bf url(exclamation.gif) center no-repeat;
+    background-position: 15px 50%; /* x-pos y-pos */
+    border-top: 2px solid #ffd324;
+    border-bottom: 2px solid #ffd324;
+    padding: 5px 20px 5px 45px;
+    text-align: left;
+    white-space: normal;
+}
+
+.warn {
+    background: #FFBFBF url(exclamation.gif) center no-repeat;
+    background-position: 15px 50%; /* x-pos y-pos */
+    border-top: 2px solid #FF2424;
+    border-bottom: 2px solid #FF2424;
+    color: #600;
+    padding: 5px 20px 5px 45px;
+    text-align: left;
+    white-space: normal;
+}
+
+/* EOF */

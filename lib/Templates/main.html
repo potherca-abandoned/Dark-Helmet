@@ -1,0 +1,71 @@
+<html
+    tal:omit-tag="true"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+>
+
+    <tal:block metal:use-macro="index.html/main">
+        <tal:block metal:fill-slot="content">
+
+            <tal:block condition="exists: previous">
+                <a
+                   href="../../" tal:attributes="href string:${sBaseUrl}history/${previous}"
+                   class="nav previous"
+                >&lt;</a>
+            </tal:block>
+
+            <div class="page" tal:condition="bShowForm">
+                <form method="post" action="">
+                    <select name="tags" id="tags"></select>
+                    <button type="submit" class="large">Send</button>
+                </form>
+            </div>
+
+            <tal:block condition="exists: next">
+                <a
+                   href="../../" tal:attributes="href string:${sBaseUrl}history/${next}"
+                   class="nav next"
+                >&gt;</a>
+            </tal:block>
+
+            <div class="page" tal:condition="php: isset(oTimeLog)" tal:content="structure oTimeLog/toHtml"></div>
+
+            <ul class="TimeLog legend">
+                <li class="time">Legend:</li>
+                <li tal:repeat="t_sPrefix aPrefix"
+                    tal:attributes="class repeat/t_sPrefix/key"
+                    tal:content="repeat/t_sPrefix/key"
+                >$t_sClass</li>
+            </ul>
+
+            <div class="page" id="tabs">
+                <h3>Summary</h3>
+                <tal:block content="structure oTimeLog/outputTaskTotalTime" ></tal:block>
+                <script type="text/javascript">
+                    $(function() {
+                        $('#tabs').tabs({
+                            event: "mouseover"
+                        });
+                    });
+                </script>
+            </div>
+
+<tal:block condition="false">
+            <div class="page">
+                <h3>Navigation</h3>
+                <!-- TODO: This is part of the dashboard, should be provided by the TotalConnector -->
+                <a href="../../" tal:attributes="href string:${sBaseUrl}total/">Task Totals</a>
+
+                <!-- TODO: This is part of the dashboard, should be provided by the HistoryConnector -->
+                <ul tal:condition="exists: aLogFiles">
+                    <li tal:repeat="t_sFilepath aLogFiles">
+                        <a href="../../" tal:attributes="href string:${sBaseUrl}history/${repeat/t_sFilepath/key}"
+                           tal:content="repeat/t_sFilepath/key"
+                        ></a>
+                    </li>
+                </ul>
+            </div>
+</tal:block>
+        </tal:block>
+    </tal:block>
+</html>

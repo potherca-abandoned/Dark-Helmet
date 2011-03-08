@@ -1,0 +1,23 @@
+{
+      "Project" : [
+            "Vacu-Suck"
+          , "Lugage Security"
+      ]
+    , "Group" : []
+    , "User" : [
+            "President Skroob"
+          , "Dark Helmet"
+          , "Colonel Sandurz"
+          , "All"
+      ]
+    , "Job" : [
+            "Team Management"
+          , "Project Management"
+          , "Development"
+          , "Maintenance"
+      ]
+    , "Task" : [
+            "Tidy desk"
+     ]
+}
+

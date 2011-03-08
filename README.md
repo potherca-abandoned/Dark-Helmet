@@ -1,5 +1,6 @@
 #Once upon a time warp in deep space, the struggle between the nice & the rotten goes on...
 Or to be more precise, the struggle between Those Who Want To Get Things Done & Those Who Want To Know How Long It Took Them... 
+
 ## Intended Use
 This tool is meant as a web-based interface to let you log your time with as little hassle as possible. The main difference with most other timers is that it asks you what you are going to do next, instead of what you have just done.
 

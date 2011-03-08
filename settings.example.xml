@@ -1,0 +1,82 @@
+<DarkHelmet>
+    <!-- All file and folder paths in this file should be Relative to the project root -->
+    <Settings>
+        <BaseUrl>/Productivity Tools/Hour_logging/</BaseUrl>
+        <Prefixes multiple-values="true">
+            <!--  '$' and '^' don't work unless escaped using \ check JS implementation ?regexpes? -->
+            <Prefix>
+                <Name>Project</Name>
+                <Character>!</Character>
+            </Prefix>
+            <Prefix>
+                <Name>Group</Name>
+                <Character>%</Character>
+            </Prefix>
+            <Prefix>
+                <Name>Meta</Name>
+                <Character>~</Character>
+            </Prefix>
+            <Prefix>
+                <Name>User</Name>
+                <Character>@</Character>
+            </Prefix>
+            <Prefix>
+                <Name>Task</Name>
+                <Character>#</Character>
+            </Prefix>
+            <!--<Prefix>-->
+                <!--<Name>Job</Name>-->
+                <!--<Character>&</Character>-->
+            <!--</Prefix>-->
+            <Prefix>
+                <Name>Time</Name>
+                <Character>-</Character>
+                <Description>Put the start time of a task in the past.</Description>
+            </Prefix>
+            <Prefix>
+                <Name>Ticket</Name>
+                <Character>*</Character>
+            </Prefix>
+            <Prefix>
+                <Name>Other</Name>
+                <Character></Character>
+            </Prefix>
+        </Prefixes>
+    </Settings>
+
+    <Connectors multiple-values="true">
+
+        <Connector>
+            <Name>Predefined</Name>
+            <Class>DarkHelmet\Connectors\Predefined\PredefinedConnector</Class>
+            <Params>
+                <TagFilePath>Predefined.tags.json</TagFilePath>
+            </Params>
+        </Connector>
+
+        <Connector>
+            <Name>Local</Name>
+            <Class>DarkHelmet\Connectors\Local\LocalConnector</Class>
+            <Params>
+                <LogsDir>logs/</LogsDir>
+                <History>14</History>
+            </Params>
+        </Connector>
+
+        <Connector>
+            <Name>Jira</Name>
+            <Class>DarkHelmet\Connectors\Jira\JiraConnector</Class>
+            <Params>
+                <Credentials source="Credentials">
+                    <User>1</User>
+                    <Password>1</Password>
+                </Credentials>
+                <Wsdl>
+                    https://example.com/jira/rpc/soap/jirasoapservice-v2?wsdl
+                </Wsdl>
+                <FilterID>10031</FilterID>
+            </Params>
+        </Connector>
+
+    </Connectors>
+</DarkHelmet>
