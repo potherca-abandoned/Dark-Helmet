@@ -14,4 +14,6 @@ Written with PHP, jQuery, HTML, CSS it tries to use existing project over creati
 So yeah... footprint could be smaller and dependencies less.
 
 ## About the name...
-I am your father's brother's nephew's cousin's former roommate!
+![Dark Helmet][dark_helmet]
+
+[dark_helmet]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"

@@ -1,6 +1,5 @@
 # Ignore any file named foo.txt.
 3rd-party
-logs/*
 
 # PhpStorm Folder
 .idea
