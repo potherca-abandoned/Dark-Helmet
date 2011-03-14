@@ -1,8 +1,5 @@
-# Ignore any file named foo.txt.
+# Ignore 3rd-party folder. Anything in it should be managed through a subtree.
 3rd-party
-
-# PhpStorm Folder
-.idea
 
 # Personal Settings
 settings.xml
