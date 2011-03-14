@@ -194,7 +194,16 @@ namespace DarkHelmet\Core\Controllers
 			$oContext->setTagPrefixes($p_oSettings->getPrefixes());
 			$oContext->setTemplate('main.html');
 
-			$oInstance->invokeHooks();
+			try{
+				$oInstance->invokeHooks();
+			}
+			catch(Exception $oEception){
+				// Kill any redirects
+				$oInstance->m_sRedirectUrl = null;
+
+				//Set error to be displayed
+				$oInstance->getContext()->set('sMessage', $oEception->getMessage());
+			}#try
 
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!
 			$sOutput = $oInstance->buildOutput();
