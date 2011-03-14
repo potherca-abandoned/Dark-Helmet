@@ -18,7 +18,7 @@ namespace DarkHelmet\Core\Controllers
 	use DarkHelmet\Core\Hooks\Tags as TagsHook;
 
 	use DarkHelmet\Connectors\Hooks\Init;
-	use DarkHelmet\Connectors\Hooks\History;
+	use DarkHelmet\Connectors\Hooks\History as ConnectorsHistoryHook;
 	use DarkHelmet\Connectors\Hooks\Tags as ConnectorsTagsHook;
 	use DarkHelmet\Connectors\Hooks\Persistence;
 
@@ -255,12 +255,11 @@ namespace DarkHelmet\Core\Controllers
 //			}#foreach
 
 			// Let any Connectors that need it prepare their things.
-//			foreach($aConnectors as $t_oConnector){
-//				if($t_oConnector instanceof Init){
-//					$t_oConnector->init($oContext);
-//				}#if
-//			}#foreach
-//
+			foreach($aConnectors as $t_oConnector){
+				if($t_oConnector instanceof Init){
+					$t_oConnector->init($oContext);
+				}#if
+			}#foreach
 
 ////////////////////////////////////////////////////////////////////////////////
 //          @TODO: Clean up Controller specific variants
@@ -274,11 +273,6 @@ namespace DarkHelmet\Core\Controllers
 					//@TODO: Instead of passing the Tags in, they should be kept out so Connectors can't mess with each others tags.
 					//@TODO: To actually allow tampering with the tags, we should add something like TagPostProcessor
 					try{
-
-						if($t_oConnector instanceof Init){
-							$t_oConnector->init($oContext);
-						}#if
-
 						$aTags = $t_oConnector->provideTags($aTags, $oContext);
 					}catch(Exception $oException){
 						$aTags = array_merge($aTags
@@ -287,7 +281,7 @@ namespace DarkHelmet\Core\Controllers
 					}
 					$this->setTags($aTags);
 				}
-				else if($this instanceof HistoryHook && $t_oConnector instanceof History){
+				else if($this instanceof HistoryHook && $t_oConnector instanceof ConnectorsHistoryHook){
 					$t_oConnector->provideHistory($oContext);
 				}
 				else if(
