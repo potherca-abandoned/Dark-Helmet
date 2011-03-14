@@ -213,8 +213,13 @@ namespace DarkHelmet\Connectors\Local
 			$sFilePath = $this->filePathForTimeLog($p_oTimeLog);
 
 			if(!file_exists($sFilePath)){
-				//@TODO: Validate we have write access
-				touch($sFilePath);
+				//Validate we have write access
+				if(!is_writable(dirname($sFilePath))){
+					throw new Exception('The log Folder is not writable!');
+				}
+				else {
+					touch($sFilePath);
+				}
 			}
 
 			$oLogFile = new SplFileObject($sFilePath, 'w+');
