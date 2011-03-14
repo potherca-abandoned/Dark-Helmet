@@ -27,6 +27,10 @@ namespace DarkHelmet\Connectors\Predefined
 				foreach($aTags as $t_sCategory => $t_aTags) {
 					foreach($t_aTags as $t_sTag) {
 						$sTag = Tags::stripspaces($t_sTag);
+
+						//@WORKAROUND: If there's an apostrophe (') in a value the JS hangs the browser.
+						$sTag = str_replace('\'', '&apos;', $sTag);
+
 						$sCaption = str_replace('_', ' ', $sTag);
 
 						if(isset ($aPrefixes[$t_sCategory])){
