@@ -215,8 +215,9 @@ namespace DarkHelmet\Core\Controllers
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!
 			$sOutput = $oInstance->buildOutput();
 			if(isset($oInstance->m_sRedirectUrl)){
+				echo '<a href="' . $oInstance->m_sRedirectUrl .'">--redirect--</a>';
+				return $sOutput;
 				header('Location: ' . $oInstance->m_sRedirectUrl, true, 303);
-				//				echo '<a href="' . $oInstance->m_sRedirectUrl .'">--redirect--</a>';
 			}
 			else {
 				return $sOutput;
@@ -431,25 +432,16 @@ namespace DarkHelmet\Core\Controllers
 				if(!empty($aPostFields)){
 					$oLogEntry = new LogEntry();
 
-					//@FIXME: This all goes cuckoo when a Ticket or Meta Tag is used in
-					//        conjunction with other tags!
-					if(count($aPostFields) === 1){
-						// Special case
-						if(strpos($aPostFields[0]{0}, $this->getContext()->getTagPrefix('Ticket')) !== false){
+					//@TODO: Special cases should be handled by connectors that implement 'Ticket' or something similar
+					if(count($aPostFields) === 1 && strpos($aPostFields[0]{0}, $this->getContext()->getTagPrefix('Ticket')) !== false){
 							// Only A ticket ID
 							// @TODO: replace post fields with full tag set for ticket
-						}else if(strpos($aPostFields[0]{0}, $this->getContext()->getTagPrefix('Meta')) !== false){
-							// Special Meta Tag
-							if(in_array($aPostFields[0]{1}, $this->getContext()->getTagPrefixes())){
-								// Plain Tags Beyond Meta Prefix
-								$aPostFields = explode(' ', substr($aPostFields[0], 1));
-							}
-							else{
-								// Extra information available
-								$aPostFields = explode(' ', $aPostFields[0]);
-							}#if
-						}#if
+					}else if(strpos($aPostFields[0], $this->getContext()->getTagPrefix('Meta')) !== false){
+						// Special Meta Tag
+						$sMeta = array_shift($aPostFields);
+						$aPostFields = array_merge(explode(' ', $sMeta), $aPostFields);
 					}#if
+
 					$oLogEntry->setMessageFromArray($aPostFields, $oTimeLog->getTagPrefixes());
 
 					$oTimeLog->addEntry($oLogEntry);

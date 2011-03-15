@@ -58,8 +58,11 @@ namespace DarkHelmet\Connectors\Jira
 				) {
 					$oDateInterval = $oTargetEntry->getTime()->diff($oLastEntry->getTime());
 
-					$sComment = isset($aMessage['Comment'])?$aMessage['Comment']:null;
-					$sComment .= "\n\n" . ' ---' . "\n" . ' logged via ' . __CLASS__ ;
+					$sComment = (isset($aMessage['Comment'])
+							?   $aMessage['Comment']."\n"
+							:'<no coment>')
+						. "\n" . ' ---'
+						. "\n" . ' logged via ' . __CLASS__ ;
 
 					$iTime = $this->dateIntervalToSeconds($oDateInterval);
 					$sTime = $this->getTimeStringFromDateInterval($oDateInterval);
