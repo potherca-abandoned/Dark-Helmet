@@ -167,6 +167,7 @@
     <script type="text/javascript" src="_/jquery/ui/jquery-ui-1.7.2.js" tal:attributes="src string:${sBaseUrl}_/jquery/ui/jquery-ui-1.7.2.js"></script>
     <script type="text/javascript" src="_/jquery.fcbkcomplete_2.6.1" tal:attributes="src string:${sBaseUrl}_/jquery.fcbkcomplete_2.6.1"></script>
     <script type="text/javascript">
+    /*<![CDATA[*/
         (function($) {
             $.fn.extend({
                 tallyTime : function(){
@@ -203,7 +204,7 @@
                     var $totalTime = $(this).find('.' + className);
                     if($totalTime.length === 0){
                         // console.log('Create total Node and set to ' + total.parse());
-                        $(this).append('<li class="'+className+'">Total: ' + total.parse() + '</li>');
+                        $(this).append('<li class="'+className+'">Total: ' + total.parse() + '<\/li>');
                     }else{
                         // console.log('Update total Node to ' + total.parse());
                         $totalTime.html(total.parse());
@@ -266,6 +267,7 @@
                 $("input")[0].focus();
             }
         });
+    /*]]>*/
     </script>
 </head>
 

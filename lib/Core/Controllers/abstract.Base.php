@@ -179,15 +179,22 @@ namespace DarkHelmet\Core\Controllers
 			$oTimeLog->setTagPrefixes($p_oSettings->getPrefixes());
 			$oTimeLog->setDate($oToday);
 
+			$sUrl = '';
+			$aPieces = explode('/', $p_oSettings->get('BaseUrl'));
+			foreach($aPieces as $t_sPiece){
+					$sUrl .= rawurlencode($t_sPiece).'/';
+			}#foreach
+			$sUrl = str_replace('//','/',$sUrl);
+
 			// Setup the current Context
 			//@TODO: Move this to protected function setupContext(){}
 			$oContext = $oInstance->getContext()
-				->set('sBaseUrl', $p_oSettings->get('BaseUrl'))
-				->set('sToday', $sToday)
-				->set('bShowForm', true)
-				->set('oTimeLog', $oTimeLog)//@CHECKME: Not all Controllers need $oTimeLog... shouldn't this be set elsewhere?
-				->set('oDate', $oToday)     //@FIXME: $oContext shouldn't know about any date other than today!
-											//        If it needs a date it should take it from the TimeLog
+					->set('sBaseUrl', $sUrl)
+					->set('sToday', $sToday)
+					->set('bShowForm', true)
+					->set('oTimeLog', $oTimeLog)//@CHECKME: Not all Controllers need $oTimeLog... shouldn't this be set elsewhere?
+					->set('oDate', $oToday)     //@FIXME: $oContext shouldn't know about any date other than today!
+				//        If it needs a date it should take it from the TimeLog
 				//->set('sTaskTotalTime', $oTimeLog->outputTaskTotalTime())
 			;
 
@@ -209,7 +216,7 @@ namespace DarkHelmet\Core\Controllers
 			$sOutput = $oInstance->buildOutput();
 			if(isset($oInstance->m_sRedirectUrl)){
 				header('Location: ' . $oInstance->m_sRedirectUrl, true, 303);
-//				echo '<a href="' . $oInstance->m_sRedirectUrl .'">--redirect--</a>';
+				//				echo '<a href="' . $oInstance->m_sRedirectUrl .'">--redirect--</a>';
 			}
 			else {
 				return $sOutput;
