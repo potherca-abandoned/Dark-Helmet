@@ -107,7 +107,6 @@ namespace DarkHelmet\Connectors\Jira
 
 		public function provideTags(Array $p_aTags, Context $p_oContext)
 		{
-
 			// http://docs.atlassian.com/software/jira/docs/api/rpc-jira-plugin/latest/com/atlassian/jira/rpc/soap/JiraSoapService.html
 			$aParsedTags = $p_aTags;
 
@@ -122,12 +121,12 @@ namespace DarkHelmet\Connectors\Jira
 			else*/
 
 			$oClient = $this->getClient();
+			
 			if($oClient !== null){
 				$aPrefixes = $p_oContext->getTagPrefixes();
 
 				try {
 					$aIssues = $oClient->getIssuesFromFilter($this->m_aConnector['oAuthentication'], $this->m_aConnector['FilterId']);
-
 					foreach($aIssues as $oIssue){
 						$tag = $this->m_aConnector['Name'] . ' ' . $aPrefixes['Project'] . $oIssue->project;
 						if(false){
@@ -144,6 +143,9 @@ namespace DarkHelmet\Connectors\Jira
 				}catch(SoapFault $e){
 					$aParsedTags[] = Tags::tagArray($p_oContext, '__ERROR__', $e->getMessage(), '');
 				}#catch
+			} else {
+				// @TODO: replace ~ with meta prefix
+				$aParsedTags[] = Tags::tagArray($p_oContext, '__ERROR__', '~'.implode(', ', $this->m_aErrors), '');
 			}#if
 
 			return $aParsedTags;
@@ -155,8 +157,8 @@ namespace DarkHelmet\Connectors\Jira
 			static $oClient;
 
 			if($oClient === null){
-				if(file_exists($this->m_aConnector['Wsdl']) || @file($this->m_aConnector['Wsdl']) !== false){
-					use_soap_error_handler(false);
+				// if(@file_exists($this->m_aConnector['Wsdl']) || @file($this->m_aConnector['Wsdl']) !== false){
+					\use_soap_error_handler(false);
 
 					try {
 						$t_oClient = new SoapClient($this->m_aConnector['Wsdl'], array('exceptions'=>true));
@@ -168,11 +170,11 @@ namespace DarkHelmet\Connectors\Jira
 					}catch(SoapFault $e){
 						$this->m_aErrors[] = $e->getMessage();
 					}
-				}
-				else{
+				//}
+				//else{
 					// could not reach server
-					$this->m_aErrors[] = 'Could not reach server...';
-				}#if
+				//	$this->m_aErrors[] = 'Could not reach server...';
+				//}#if
 			}#if
 
 			return $oClient;

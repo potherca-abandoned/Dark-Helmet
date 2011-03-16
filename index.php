@@ -21,6 +21,8 @@
  */
 namespace DarkHelmet
 {
+	date_default_timezone_set("Europe/Amsterdam");
+		
 	use DarkHelmet\Core\Exception;
 	use DarkHelmet\Core\Request;
 	use DarkHelmet\Core\Settings;

@@ -81,7 +81,7 @@ php_flag register_globals Off
     # Redirected everything that is an existing file and part of the public    #
     # dir is directed straight to the existing file.                           #
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -#
-        RewriteCond %{REQUEST_URI} !^/$
+        RewriteCond %{REQUEST_URI} !^/$ [OR]
         RewriteCond %{REQUEST_URI} !^/_/(.*)
         RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f
         RewriteRule .? - [QSA,L,E=REWRITE_SOURCE:REAL_FILE,E=_REDIRECT:yes]
