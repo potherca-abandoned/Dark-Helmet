@@ -215,8 +215,8 @@ namespace DarkHelmet\Core\Controllers
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!
 			$sOutput = $oInstance->buildOutput();
 			if(isset($oInstance->m_sRedirectUrl)){
-				echo '<a href="' . $oInstance->m_sRedirectUrl .'">--redirect--</a>';
-				return $sOutput;
+//				echo '<a href="' . $oInstance->m_sRedirectUrl .'">--redirect--</a>';
+//				return $sOutput;
 				header('Location: ' . $oInstance->m_sRedirectUrl, true, 303);
 			}
 			else {

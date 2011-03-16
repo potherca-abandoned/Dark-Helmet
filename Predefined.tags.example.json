@@ -1,9 +1,12 @@
 {
       "Project" : [
             "Vacu-Suck"
-          , "Luggage Security"
+          , "Luggage"
       ]
-    , "Group" : []
+    , "Group" : [
+		  "Impedement"
+		, "Security"
+	]
     , "User" : [
             "President Skroob"
           , "Dark Helmet"
