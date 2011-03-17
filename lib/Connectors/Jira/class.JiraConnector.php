@@ -121,7 +121,7 @@ namespace DarkHelmet\Connectors\Jira
 			else*/
 
 			$oClient = $this->getClient();
-			
+
 			if($oClient !== null){
 				$aPrefixes = $p_oContext->getTagPrefixes();
 
@@ -157,23 +157,29 @@ namespace DarkHelmet\Connectors\Jira
 			static $oClient;
 
 			if($oClient === null){
-				// if(@file_exists($this->m_aConnector['Wsdl']) || @file($this->m_aConnector['Wsdl']) !== false){
-					\use_soap_error_handler(false);
-
-					try {
-						$t_oClient = new SoapClient($this->m_aConnector['Wsdl'], array('exceptions'=>true));
-						$oAuthentication = $t_oClient->login($this->m_aConnector['User'], $this->m_aConnector['Password']);
-						if ($oAuthentication !== null){
-							$this->m_aConnector['oAuthentication'] = $oAuthentication;
-							$oClient = $t_oClient;
-						}#if
-					}catch(SoapFault $e){
-						$this->m_aErrors[] = $e->getMessage();
+//					$rFilePointer = fsockopen($this->m_aConnector['Wsdl'], 80, $iError, $sError, 30);
+					if(!function_exists('use_soap_error_handler')){
+						$this->m_aErrors[] = 'The SOAP extension is not installed!';
 					}
-				//}
-				//else{
-					// could not reach server
-				//	$this->m_aErrors[] = 'Could not reach server...';
+//					else if($rFilePointer === false){
+//						$this->m_aErrors[] = 'Could not reach server "'.$this->m_aConnector['Wsdl'].'".';
+//					}
+					else{
+//						fclose($rFilePointer); // No longer needed
+						use_soap_error_handler(false);
+
+						try {
+							$t_oClient = new SoapClient($this->m_aConnector['Wsdl'], array('exceptions'=>true));
+							$oAuthentication = $t_oClient->login($this->m_aConnector['User'], $this->m_aConnector['Password']);
+							if ($oAuthentication !== null){
+								$this->m_aConnector['oAuthentication'] = $oAuthentication;
+								$oClient = $t_oClient;
+							}#if
+						}catch(SoapFault $e){
+							$this->m_aErrors[] = $e->getMessage();
+						}#try
+					}#if
+
 				//}#if
 			}#if
 
