@@ -2,6 +2,7 @@
 
 namespace DarkHelmet\Connectors
 {
+	use DarkHelmet\Core\Exception;
 	use DarkHelmet\Core\Object;
 
 	abstract class Base extends Object{
@@ -23,8 +24,15 @@ namespace DarkHelmet\Connectors
 		public function getParam($p_sName)
 		{
 			$aParams = $this->getParams();
-			//@TODO validate in_array() ? Depends on expected behaviour/exceptions
-			return $aParams[$p_sName];
+			if(!array_key_exists($p_sName, $aParams)){
+				throw new Exception(
+					  'Connector "' . get_called_class() . '" is trying to access '
+					. 'a Parameter that does not exist in the Settings named '
+				    . '"' . $p_sName .'" '
+				);
+			}else{
+				return $aParams[$p_sName];
+			}#if
 		}
 
 //////////////////////////////// Public Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
