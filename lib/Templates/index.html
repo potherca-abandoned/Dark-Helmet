@@ -277,7 +277,7 @@
 
 <body>
     <h1><a href="../../" tal:attributes="href string:${sBaseUrl}">Hour logging</a></h1>
-    <p tal:condition="exists:sMessage" tal:content="string:Error: ${sMessage}" class="warn no-numbering"
+    <p tal:condition="exists:sMessage" tal:content="structure sMessage" class="warn no-numbering"
     >Error: ${sMessage}</p>
 
 <tal:block metal:define-slot="content">
