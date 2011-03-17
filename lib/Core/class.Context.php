@@ -2,6 +2,8 @@
 
 namespace DarkHelmet\Core
 {
+	use \DateTime;
+
 	/* This context should be general to the entire tool, not just the template.
 	 * It should be allowed to be *passed* to the template, it should not reside
 	 * or originate there. That way, relevant data can be generated, populated
