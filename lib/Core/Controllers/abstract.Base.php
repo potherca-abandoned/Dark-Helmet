@@ -2,7 +2,6 @@
 namespace DarkHelmet\Core\Controllers
 {
 	use \DateTime;
-	use \InvalidArgumentException;
 
 	use DarkHelmet\Core\Context;
 	use DarkHelmet\Core\Exception;
@@ -264,9 +263,14 @@ namespace DarkHelmet\Core\Controllers
 
 			// Let any Connectors that need it prepare their things.
 			foreach($aConnectors as $t_oConnector){
-				if($t_oConnector instanceof Init){
-					$t_oConnector->init($oContext);
-				}#if
+				try{
+					if($t_oConnector instanceof Init){
+						$t_oConnector->init($oContext);
+					}#if
+				}catch(Exception $oException){
+					$this->getContext()->set('sMessage', $oException->getMessage());
+					//@TODO: Remember the offending class as to not call it again!
+				}
 			}#foreach
 
 ////////////////////////////////////////////////////////////////////////////////

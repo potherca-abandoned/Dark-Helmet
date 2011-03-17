@@ -34,6 +34,15 @@ namespace DarkHelmet\Core\Controllers
 			header('Content-Type: text/plain;');
 			$aTags = $this->array_unique_multi($this->m_aTags);
 
+			if($this->getContext()->offsetExists('sMessage')){
+				$sMessage = $this->getContext()-> get('sMessage');
+				if(!empty($sMessage)) {
+					$aTags = array_merge(
+						  $aTags
+						, Tags::tagArray($this->getContext(), '__ERROR__', $sMessage, '')
+					);
+				}#if
+			}#if
 			return json_encode($aTags, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
 		}
 
@@ -68,6 +77,7 @@ namespace DarkHelmet\Core\Controllers
 		 * Replace underscores with an HTML entity and replace spaces with underscores
 		 *
 		 * @param string $p_sString
+		 *
 		 * @return string
 		 */
 		final static public function stripSpaces($p_sString)
@@ -76,7 +86,7 @@ namespace DarkHelmet\Core\Controllers
 			$sReplacementEntity = '&#95;';
 
 			$sString = str_replace($sReplacement, $sReplacementEntity, $p_sString);
-			$sString = str_replace(' ', $sReplacement, $p_sString);
+			$sString = str_replace(' ', $sReplacement, $sString);
 
 			return $sString;
 		}
@@ -98,9 +108,17 @@ namespace DarkHelmet\Core\Controllers
 			return $sString;
 		}
 
+		/**
+		 *
+		 * @param \DarkHelmet\Core\Context $p_oContext
+		 * @param  string $p_sCategory
+		 * @param  string $p_sCaption
+		 * @param  string $p_sValue
+		 *
+		 * @return array
+		 */
 		final static public function tagArray(Context $p_oContext, $p_sCategory, $p_sCaption, $p_sValue)
 		{
-
 			$aPrefixes = $p_oContext->get('aPrefix');
 			if(array_key_exists($p_sCategory, $aPrefixes)){
 
