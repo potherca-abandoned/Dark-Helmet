@@ -3,6 +3,7 @@
 namespace DarkHelmet\Core
 {
 	use DateTime;
+	use DateInterval;
 
 	class LogEntry{
 		// <editor-fold defaultstate="collapsed" desc="Property string Message">
