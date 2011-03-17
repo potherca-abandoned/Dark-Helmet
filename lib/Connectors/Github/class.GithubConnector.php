@@ -4,9 +4,10 @@ namespace DarkHelmet\Connectors\Github
 	use \DateInterval;
 
 	use DarkHelmet\Core\Context;
-	use DarkHelmet\Core\TimeLog;
-	use DarkHelmet\Core\Controllers\Tags;
 	use DarkHelmet\Core\Exception;
+	use DarkHelmet\Core\TimeLog;
+
+	use DarkHelmet\Core\Controllers\Tags;
 
 	use DarkHelmet\Connectors\Base;
 	use DarkHelmet\Connectors\Hooks\Persistence as PersistenceHook;
@@ -144,34 +145,6 @@ namespace DarkHelmet\Connectors\Github
 		}
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-		protected function getClient()
-		{
-			static $oClient;
-
-			if($oClient === null){
-				if(file_exists($this->m_aConnector['Wsdl']) || @file($this->m_aConnector['Wsdl']) !== false){
-					use_soap_error_handler(false);
-
-					try {
-						$t_oClient = new SoapClient($this->m_aConnector['Wsdl'], array('exceptions'=>true));
-						$oAuthentication = $t_oClient->login($this->m_aConnector['User'], $this->m_aConnector['Password']);
-						if ($oAuthentication !== null){
-							$this->m_aConnector['oAuthentication'] = $oAuthentication;
-							$oClient = $t_oClient;
-						}#if
-					}catch(SoapFault $e){
-						$this->m_aErrors[] = $e->getMessage();
-					}
-				}
-				else{
-					// could not reach server
-					$this->m_aErrors[] = 'Could not reach server...';
-				}#if
-			}#if
-
-			return $oClient;
-		}
-
 		protected function dateIntervalToSeconds(DateInterval $p_oDateInterval)
 		{
 			return
