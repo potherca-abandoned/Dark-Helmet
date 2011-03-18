@@ -326,14 +326,12 @@ jQuery(
 
 					if (data != null && data.length)
 					{
-//console.info('Dumping AJAX data');
 						$.each(data,
 	                    	function(i, val)
 	                    	{
-//console.debug(i, val);
-/**/                            if(val.addClass === '__ERROR__'){
-/**/                                console.error(val.caption);
-/**/                                //@TODO: Remove item from stack and warn GUI
+/**/                            if(val.value === '__ERROR__: '){
+/**/                                //@TODO:    This should be connected to an ID
+/**/                                $('<p class="warn no-numbering">'+val.caption+'</p>').insertAfter('h1');
 /**/                            }//if
 
 								cache.push (
