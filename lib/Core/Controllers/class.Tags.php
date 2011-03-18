@@ -43,7 +43,22 @@ namespace DarkHelmet\Core\Controllers
 					);
 				}#if
 			}#if
-			return json_encode($aTags, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
+
+			// Sanitize Tags
+			foreach($aTags as $t_iIndex => $t_aTag){
+				//@WARNING: If there's an apostrophe (') in a value the JS hangs the browser.
+				//          Aparently there's more than just an ' that does that...
+
+				//@TODO: Move the sanatization to a method to remove Copy/Paste here!
+				if(strpos($t_aTag['caption'],'\'') !== false){
+					$aTags[$t_iIndex]['caption'] = str_replace('\'', '`', $t_aTag['caption']); // Id use &apos; but PHP's html_entity_decode doesn't seem to support that...
+				}#if
+
+				if(strpos($t_aTag['value'],'\'') !== false){
+					$aTags[$t_iIndex]['value'] = str_replace('\'', "`", $t_aTag['value']);
+				}#if
+			}
+			return json_encode($aTags, JSON_HEX_TAG);//|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
 		}
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
