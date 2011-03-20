@@ -1,0 +1,71 @@
+class.GithubConnector.php
+(59, 6) //@TODO: The following code is copy/paste straight from the JiraConnector,
+(92, 6) //@TODO: I'm guessing that a cache mechanism should also be generic
+(112, 6) //@TODO: Poll the server before trying to get content
+
+class.JiraConnector.php
+(101, 11) // @TODO: Decide on error handling...
+(114, 6) //@TODO: Check if local cache... saves hitting the server too much
+(115, 6) //@TODO: Have a "Force cache" button somewhere and a "Cache Lifetime" setting
+(134, 11) // @TODO: check for non-custom groups
+(148, 8) // @TODO: replace ~ with meta prefix
+
+class.LocalConnector.php
+(98, 6) //@TODO: Learn to work with DateTime objects instead of strings already, jeez! :-/
+(99, 6) //@TODO: These need to come from the context...
+(179, 6) //@TODO: We should filter meta tags out of the POST and fire logic for it there,
+(247, 7) //@TODO: Validate we have read access
+(249, 7) //@TODO: Merge data from current TimeLog and File
+
+class.LogEntry.php
+(32, 8) //@TODO: Validate that substracted time is not before last added time ?
+(111, 6) //@TODO: $p_sEntry format should be validated, use sscanf() maybe?
+(144, 8) //@TODO: Find a more elegant solution to handle multiple tag entries
+
+class.Settings.php
+(69, 8) //@TODO: Validate what happens when 'Connectors' is missing or empty
+(85, 8) //@TODO: Validate these actually exist
+(98, 9) //@TODO: Validate contains class $oReflector ?
+(152, 6) //@TODO: replace $p_sFilePath by an splFileObject
+(156, 6) //@TODO: Validate $p_sFilePath actually exists and is readable
+
+class.TimeLog.php
+(190, 11) //@TODO: Add "ignore tags" attribute
+
+abstract.Base.php
+(86, 41) static protected $m_oRequest;       //@TODO: This should be a object at some point
+(162, 6) //@TODO: Validate we have all the settings we need.
+(174, 6) //@FIXME: TimeLog doesn't belong here, only in controllers that need it...
+(176, 6) //@TODO: move this to protected function setupTimeLog(\DateTime $p_oDate, Array $p_aPrefixes){}
+(189, 6) //@TODO: Move this to protected function setupContext(){}
+(194, 36) ->set('oTimeLog', $oTimeLog)//@CHECKME: Not all Controllers need $oTimeLog... shouldn't this be set elsewhere?
+(195, 36) ->set('oDate', $oToday)     //@FIXME: $oContext shouldn't know about any date other than today!
+(214, 6) //@TODO: This can be cleaned up by using a response object instead of plain strings!
+(247, 3) //@TODO: Implement logic below
+(272, 8) //@TODO: Remember the offending class as to not call it again!
+(277, 13) //          @TODO: Clean up Controller specific variants
+(285, 8) //@TODO: Instead of passing the Tags in, they should be kept out so Connectors can't mess with each others tags.
+(286, 8) //@TODO: To actually allow tampering with the tags, we should add something like TagPostProcessor
+(439, 8) //@TODO: Special cases should be handled by connectors that implement 'Ticket' or something similar
+(442, 11) // @TODO: replace post fields with full tag set for ticket
+
+class.History.php
+(60, 6) //@FIXME: This should be moved to the LocalConnector
+(64, 6) //@TODO: Retrieve "the History" which should either be a collection or an array of TimeLogs
+
+class.Home.php
+(6, 5) // @TODO: Maybe the Home Controller should become "Persistence controller"
+(8, 5) // @TODO: Think about Navigation/Menus ...
+
+class.Tags.php
+(18, 6) //@TODO: $this->validateTags($aTags);
+(22, 6) //@TODO: $aTags = array_merge_unique($aTags);
+(33, 6) //@TODO: The header "Content-Type" should not be set here, but marked in the response.
+(52, 7) //@TODO: Move the sanatization to a method to remove Copy/Paste here!
+
+jquery.fcbkcomplete_2.6.1.js
+(197, 27) //@FIXME: Check if mouse pointer isn't, in fact, over the scrollbar!
+(333, 39) //@TODO:    This should be connected to an ID
+
+index.html
+(103, 11) /*@TODO: The selector here is weird because of specifity needed. We should just add an ID to the body and use that for leverage...*/
