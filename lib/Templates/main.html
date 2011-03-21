@@ -33,9 +33,8 @@
             <ul class="TimeLog legend">
                 <li class="time">Legend:</li>
                 <li tal:repeat="t_sPrefix aPrefix"
-                    tal:attributes="class repeat/t_sPrefix/key"
-                    tal:content="repeat/t_sPrefix/key"
-                >$t_sClass</li>
+            		tal:attributes="class repeat/t_sPrefix/key;"
+                ><b style="color:black;">${t_sPrefix}</b> ${repeat/t_sPrefix/key}</li>
             </ul>
 
             <div class="page" id="tabs">
