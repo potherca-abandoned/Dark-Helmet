@@ -129,12 +129,12 @@ namespace DarkHelmet\Connectors\Jira
 				try {
 					$aIssues = $oClient->getIssuesFromFilter($this->m_aConnector['oAuthentication'], $this->m_aConnector['FilterId']);
 					foreach($aIssues as $oIssue){
-						$tag = $this->m_aConnector['Name'] . ' ' . $aPrefixes['Project'] . $oIssue->project;
+						$tag = $this->m_aConnector['Name'] . ' ' . Tags::stripSpaces($aPrefixes['Project'] . $oIssue->project);
 						if(false){
 							// @TODO: check for non-custom groups
 						}
 						elseif(isset($oIssue->components[0])){
-							$tag .= ' '.$aPrefixes['Group'] . $oIssue->components[0]->name; // $oIssue->components[0]->id);
+							$tag .= ' ' . Tags::stripSpaces($aPrefixes['Group'] . $oIssue->components[0]->name); // $oIssue->components[0]->id);
 						}#if
 						$tag .= ' ' . Tags::stripSpaces($aPrefixes['Task'] . $oIssue->summary);//, $oIssue->id); // or $oIssue->key ?
 						$tag .= ' ' . Tags::stripSpaces($aPrefixes['Ticket'] . $oIssue->key);
