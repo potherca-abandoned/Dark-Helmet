@@ -34,7 +34,31 @@ namespace DarkHelmet\Core\Controllers
 			header('Content-Type: text/plain;');
 			$aTags = $this->array_unique_multi($this->m_aTags);
 
-			return json_encode($aTags, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
+			if($this->getContext()->offsetExists('sMessage')){
+				$sMessage = $this->getContext()-> get('sMessage');
+				if(!empty($sMessage)) {
+					$aTags = array_merge(
+						  $aTags
+						, Tags::tagArray($this->getContext(), '__ERROR__', $sMessage, '')
+					);
+				}#if
+			}#if
+
+			// Sanitize Tags
+			foreach($aTags as $t_iIndex => $t_aTag){
+				//@WARNING: If there's an apostrophe (') in a value the JS hangs the browser.
+				//          Aparently there's more than just an ' that does that...
+
+				//@TODO: Move the sanatization to a method to remove Copy/Paste here!
+				if(strpos($t_aTag['caption'],'\'') !== false){
+					$aTags[$t_iIndex]['caption'] = str_replace('\'', '`', $t_aTag['caption']); // Id use &apos; but PHP's html_entity_decode doesn't seem to support that...
+				}#if
+
+				if(strpos($t_aTag['value'],'\'') !== false){
+					$aTags[$t_iIndex]['value'] = str_replace('\'', "`", $t_aTag['value']);
+				}#if
+			}
+			return json_encode($aTags, JSON_HEX_TAG);//|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
 		}
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -68,6 +92,7 @@ namespace DarkHelmet\Core\Controllers
 		 * Replace underscores with an HTML entity and replace spaces with underscores
 		 *
 		 * @param string $p_sString
+		 *
 		 * @return string
 		 */
 		final static public function stripSpaces($p_sString)
@@ -76,7 +101,7 @@ namespace DarkHelmet\Core\Controllers
 			$sReplacementEntity = '&#95;';
 
 			$sString = str_replace($sReplacement, $sReplacementEntity, $p_sString);
-			$sString = str_replace(' ', $sReplacement, $p_sString);
+			$sString = str_replace(' ', $sReplacement, $sString);
 
 			return $sString;
 		}
@@ -98,9 +123,17 @@ namespace DarkHelmet\Core\Controllers
 			return $sString;
 		}
 
+		/**
+		 *
+		 * @param \DarkHelmet\Core\Context $p_oContext
+		 * @param  string $p_sCategory
+		 * @param  string $p_sCaption
+		 * @param  string $p_sValue
+		 *
+		 * @return array
+		 */
 		final static public function tagArray(Context $p_oContext, $p_sCategory, $p_sCaption, $p_sValue)
 		{
-
 			$aPrefixes = $p_oContext->get('aPrefix');
 			if(array_key_exists($p_sCategory, $aPrefixes)){
 

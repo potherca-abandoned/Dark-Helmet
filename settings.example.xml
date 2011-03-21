@@ -1,7 +1,9 @@
 <DarkHelmet>
     <!-- All file and folder paths in this file should be Relative to the project root -->
     <Settings>
-        <BaseUrl>/Productivity Tools/Hour_logging/</BaseUrl>
+
+        <BaseUrl>/Dark-Helmet/</BaseUrl>
+
         <Prefixes multiple-values="true">
             <!--  '$' and '^' don't work unless escaped using \ check JS implementation ?regexpes? -->
             <Prefix>
@@ -44,6 +46,7 @@
         </Prefixes>
     </Settings>
 
+
     <Connectors multiple-values="true">
 
         <Connector>
@@ -60,6 +63,15 @@
             <Params>
                 <LogsDir>logs/</LogsDir>
                 <History>14</History>
+            </Params>
+        </Connector>
+
+        <Connector>
+            <Name>Github</Name>
+            <Class>DarkHelmet\Connectors\Github\GithubConnector</Class>
+            <Params>
+                <GitUser>Potherca</GitUser>
+                <GitRepo>dark-helmet</GitRepo>
             </Params>
         </Connector>
 

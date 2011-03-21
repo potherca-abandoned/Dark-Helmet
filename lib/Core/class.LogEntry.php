@@ -29,16 +29,29 @@ namespace DarkHelmet\Core
 			$aTags = array();
 			foreach($p_aTags as $t_sKey => $t_sTag) {
 				if($t_sTag{0} === $p_aPrefixes['Time']){
-					//@TODO: Validate that substracted time is not before last added time
+					//@TODO: Validate that substracted time is not before last added time ?
+					//       Or do we want to allow jumping the queue?
 					$sInterval = substr($t_sTag,1);
-					try{
-						$oInterval = new DateInterval('PT'.strtoupper($sInterval));
-					}catch(Exception $eAny){
-						throw new InvalidArgumentException('Given Subtraction Time "'.$t_sTag.'" is not valid. <br>'
-							. 'The Correct Subtraction Format is the amount of hours or minutes to subtract followed by the letter "h" to denote hours and/or the letter "m" to denote minutes.<br>'
-							. '<br>For example: <code>'.$t_sTag.'20m</code> to subtract 20 minutes or <code>'.$t_sTag.'1h20m</code> to subtract 1 hour and 20 minutes.');
-					}#try
 
+					$sErrorMessage =
+						  'Given Subtraction Time <code>'.$t_sTag.'</code> is not valid. <br>'
+						. 'The Correct Subtraction Format is the amount of hours or '
+						. 'minutes to subtract followed by the letter "h" to denote hours '
+						. 'and/or the letter "m" to denote minutes.<br>'
+						. '<br>For example: <code>20m</code> to subtract 20 '
+						. 'minutes or <code>1h20m</code> to subtract 1 hour '
+						. 'and 20 minutes.'
+					;
+
+					if(preg_match('/([0-9]+[hm])+/', $sInterval) === 0){
+						throw new Exception($sErrorMessage);
+					}else{
+						try{
+							$oInterval = new DateInterval('PT'.strtoupper($sInterval));
+						}catch(Exception $eAny){
+							throw new Exception($sErrorMessage);
+						}#try
+					}
 					$this->getTime()->sub($oInterval);
 				}else{
 					$aTags[$t_sKey] = self::stripspaces($t_sTag);

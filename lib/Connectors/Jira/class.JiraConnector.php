@@ -6,9 +6,10 @@ namespace DarkHelmet\Connectors\Jira
 	use \DateInterval;
 
 	use DarkHelmet\Core\Context;
-	use DarkHelmet\Core\TimeLog;
-	use DarkHelmet\Core\Controllers\Tags;
 	use DarkHelmet\Core\Exception;
+	use DarkHelmet\Core\TimeLog;
+
+	use DarkHelmet\Core\Controllers\Tags;
 
 	use DarkHelmet\Connectors\Base;
 	use DarkHelmet\Connectors\Hooks\Persistence as PersistenceHook;
@@ -98,7 +99,7 @@ namespace DarkHelmet\Connectors\Jira
 							 */
 						}catch(SoapFault $e){
 							// @TODO: Decide on error handling...
-							die($e->getMessage());
+							throw new Exception('Error logging hours to ticket: ' . $e->getMessage());
 						}
 					}#if
 				}#if

@@ -84,7 +84,11 @@ namespace DarkHelmet\Core
 				foreach($aConnectorsList as $t_aConnector){
 					//@TODO: Validate these actually exist
 					$sName = $t_aConnector['Name'];
-					$aParams = $t_aConnector['Params'];
+					if(isset($t_aConnector['Params'])){
+						$aParams = $t_aConnector['Params'];
+					}else{
+						$aParams = array();
+					}#if
 					$sClassName = $t_aConnector['Class'];
 
 					$oReflector = new \ReflectionClass($sClassName);
@@ -134,7 +138,7 @@ namespace DarkHelmet\Core
 				array_unshift($p_aArguments, $sMethodName);
 				return call_user_func_array(array($this, 'get'), $p_aArguments);
 			}else{
-				throw new Exception('Call to undefined method '.__CLASS__.'::'.$p_sMethodName.'()');
+				throw new Exception('Call to undefined method ' . get_called_class() . '::'.$p_sMethodName.'()');
 			}
 		}
 
