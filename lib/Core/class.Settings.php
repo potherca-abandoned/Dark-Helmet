@@ -165,41 +165,43 @@ namespace DarkHelmet\Core
 			$aList = array();
 
 			foreach($p_oConnectorList as $t_oChild){
-				$bAllowMultipleValues =
-					    $t_oChild->hasAttribute('multiple-values')
-					&& (bool) $t_oChild->getAttribute('multiple-values')
-				;
+				if($t_oChild instanceof \DOMElement){
+					$bAllowMultipleValues =
+							$t_oChild->hasAttribute('multiple-values')
+						&& (bool) $t_oChild->getAttribute('multiple-values')
+					;
 
-				if($t_oChild->hasAttribute('source')
-					&& is_callable(array($this, 'get' . $t_oChild->getAttribute('source')))
-				){
-					// Replace the value and anything beneath with the given source
-					$mValue = call_user_func(
-						  array($this, 'get' . $t_oChild->getAttribute('source'))
-						, $t_oChild
-					);
-				}else if($t_oChild instanceof \DOMElement){
-					// Check if this node actually has any children, as $t_oChild->haschildNodes() will always give 'true'
-					foreach($t_oChild->childNodes as $t_oGrandChild){
-						if($t_oGrandChild->nodeType === XML_ELEMENT_NODE){
-							// Call ourselves to get name / value of children as well
-							$mValue = call_user_func(__CLASS__.'::'.__FUNCTION__, $t_oChild->childNodes, $bAllowMultipleValues);
-							break; // We don't need to know if there is more than one child
-						}
-						else{
-							// Get name / value
-							$mValue = trim($t_oChild->nodeValue);
-						}#if
-					}#foreach
+					if($t_oChild->hasAttribute('source')
+						&& is_callable(array($this, 'get' . $t_oChild->getAttribute('source')))
+					){
+						// Replace the value and anything beneath with the given source
+						$mValue = call_user_func(
+							  array($this, 'get' . $t_oChild->getAttribute('source'))
+							, $t_oChild
+						);
+					}
+					else {
+						// Check if this node actually has any children, as $t_oChild->haschildNodes() will always give 'true'
+						foreach($t_oChild->childNodes as $t_oGrandChild){
+							if($t_oGrandChild->nodeType === XML_ELEMENT_NODE){
+								// Call ourselves to get name / value of children as well
+								$mValue = call_user_func(__CLASS__.'::'.__FUNCTION__, $t_oChild->childNodes, $bAllowMultipleValues);
+								break; // We don't need to know if there is more than one child
+							}
+							else{
+								// Get name / value
+								$mValue = trim($t_oChild->nodeValue);
+							}#if
+						}#foreach
+					}#if
+
+					if($p_bAllowMultipleValues === true){
+						$aList[$t_oChild->nodeName][] = $mValue;
+					}
+					else{
+						$aList[$t_oChild->nodeName] = $mValue;
+					}#if
 				}#if
-
-				if($p_bAllowMultipleValues === true){
-					$aList[$t_oChild->nodeName][] = $mValue;
-				}
-				else{
-					$aList[$t_oChild->nodeName] = $mValue;
-				}#if
-
 			}#foreach
 
 			return $aList;
