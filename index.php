@@ -17,12 +17,12 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
- * 
+ *
  */
 namespace DarkHelmet
 {
 	date_default_timezone_set("Europe/Amsterdam");
-		
+
 	use DarkHelmet\Core\Exception;
 	use DarkHelmet\Core\Request;
 	use DarkHelmet\Core\Settings;
@@ -36,11 +36,18 @@ namespace DarkHelmet
 //----------------------------------------------------------------------------//
 	error_reporting(E_STRICT | E_ALL);
 
+	set_error_handler(
+		function($p_iError, $p_sError, $p_sFile, $p_iLine ) {
+			throw new \ErrorException($p_sError, 0, $p_iError, $p_sFile, $p_iLine);
+		}
+	);
+
 	define('PROJECT_DIR',   realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 	define('LOGS_DIR',      PROJECT_DIR  . 'logs/');
 	define('TEMPLATE_DIR',  PROJECT_DIR  . 'lib/Templates/');
 
 	require '3rd-party/PHPTAL/classes/PHPTAL.php'; // Template Autoloader
+
 	spl_autoload_register(
 		function($p_sFullyQualifiedClassName){
 			if(strpos($p_sFullyQualifiedClassName, 'DarkHelmet') === 0){
