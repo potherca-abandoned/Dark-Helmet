@@ -31,7 +31,10 @@ namespace DarkHelmet\Core\Controllers
 		public function buildOutput()
 		{
 			//@TODO: The header "Content-Type" should not be set here, but marked in the response.
-			header('Content-Type: text/plain;');
+			if(headers_sent() === false){
+				header('Content-Type: text/plain;');
+			}#if
+
 			$aTags = $this->array_unique_multi($this->m_aTags);
 
 			if($this->getContext()->offsetExists('sMessage')){

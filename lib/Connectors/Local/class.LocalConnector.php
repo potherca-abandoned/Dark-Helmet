@@ -7,6 +7,7 @@ namespace DarkHelmet\Connectors\Local
 
 	use DarkHelmet\Core\Context;
 	use DarkHelmet\Core\Exception;
+	use DarkHelmet\Core\Controllers\Tags;
 	use DarkHelmet\Core\TimeLog;
 	use DarkHelmet\Core\LogEntry;
 
@@ -56,14 +57,6 @@ namespace DarkHelmet\Connectors\Local
 
 		public function provideTags(Array $p_aTags, Context $p_oContext)
 		{
-			// This only provides tags from today's log.
-			// How to include tags from the history? That's something else than
-			// just providing a history which is just the ability to browse the
-			// history. There *needs* to be a clear way to distinguish between
-			// the two!
-
-			// If there is a log for today, get contents, parse tags, return.
-			// For a history it would be the same, only opening more files...
 			return $this->provideTagsFromHistory($p_aTags, $p_oContext);
 		}
 
@@ -76,7 +69,7 @@ namespace DarkHelmet\Connectors\Local
 		{
 			$aParsedTags = $p_aTags;
 
-			$p_oContext->set('aLogFiles',$this->getHistoryList());
+//			$p_oContext->set('aLogFiles',$this->getHistoryList());
 
 			// The code below provides tags from the history and should be moved
 			// to a local-history-tag-provider-thingy.
@@ -96,10 +89,9 @@ namespace DarkHelmet\Connectors\Local
 //			}
 
 			//@TODO: Learn to work with DateTime objects instead of strings already, jeez! :-/
-			//@TODO: These need to come from the context...
-			$sDate = null;
+			$sDate = $p_oContext->get('sToday');
 			$sFirstDate = date('Ymd', mktime(
-				date('H')
+				  date('H')
 				, date('i')
 				, date('s')
 				, date('m')
