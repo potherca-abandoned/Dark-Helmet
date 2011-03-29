@@ -91,6 +91,9 @@ namespace DarkHelmet\Core\Controllers
 			$this->m_oContext = $m_oContext;
 		}
 
+		/**
+		 * @return \DarkHelmet\Core\Context\Context
+		 */
 		public function getContext()
 		{
 			return $this->m_oContext;
@@ -443,6 +446,12 @@ namespace DarkHelmet\Core\Controllers
 					}else if(strpos($aPostFields[0], $this->getContext()->getTagPrefix('Meta')) !== false){
 						// Special Meta Tag
 						$sMeta = array_shift($aPostFields);
+
+						if($sMeta{0} === $this->getContext()->getTagPrefix('Meta')
+							&& array_search($sMeta{1}, $this->getContext()->getTagPrefixes()) !== false
+						){
+							$sMeta = substr($sMeta, 1);
+						}
 						$aPostFields = array_merge(explode(' ', $sMeta), $aPostFields);
 					}#if
 
@@ -451,7 +460,7 @@ namespace DarkHelmet\Core\Controllers
 					$oTimeLog->addEntry($oLogEntry);
 				}#if
 			}#if
-
+			
 			return $oTimeLog;
 		}
 	}
