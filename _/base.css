@@ -6,6 +6,7 @@
  *      2. GENERAL STYLES
  *      3. CLASSES
  *      4. HELPER CLASSES
+ * 		5. JAVASCRIPT ENHANCED ELEMENTS
  *-----------------------------------------------------------*
  *      BLUE        #0558A8
  *      LIGHT BLUE  #CCCCFF
@@ -173,4 +174,13 @@ body {
     white-space: normal;
 }
 
+/*         JAVASCRIPT ENHANCED ELEMENTS
+**************************************************************/
+
+.ui-tabs .ui-tabs-nav li a {
+	float: left;
+	text-decoration: none;
+	padding: .5em 1em;
+	border-bottom: none;
+}
 /* EOF */
