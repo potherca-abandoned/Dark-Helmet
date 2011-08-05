@@ -2,6 +2,7 @@
 namespace DarkHelmet\Core\Controllers
 {
 	use DarkHelmet\Core\Hooks\Persistence as PersistenceHook;
+	use DarkHelmet\Core\Hooks\History as HistoryHook;
 
 	// @TODO: Maybe the Home Controller should become "Persistence controller"
 	//        and be replaced by a configurable Dashboard-style controller?
@@ -19,7 +20,8 @@ namespace DarkHelmet\Core\Controllers
 	 *
 	 * @NOTE: At this point it untested whether or not the sessions hold beyond midnight.
 	 */
-	class Home extends Base implements PersistenceHook // Persistence = Handle any $_POST data
+	class Home extends Base implements PersistenceHook  // Persistence = Handle any $_POST data
+                                     , HistoryHook
 	{
 		public function __construct()
 		{

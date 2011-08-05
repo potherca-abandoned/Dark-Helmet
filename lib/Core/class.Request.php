@@ -14,6 +14,9 @@ namespace DarkHelmet\Core
 		    $this->m_aPostFields = $p_aPostFields;
 	    }
 
+        /**
+         * @return array
+         */
 	    public function getPostFields()
 	    {
 		    return $this->m_aPostFields;
@@ -24,10 +27,30 @@ namespace DarkHelmet\Core
 		    $this->m_sUrl = (string) $p_sUrl;
 	    }
 
+        /**
+         * @return string
+         */
 		public function getUrl()
 		{
 			return $this->m_sUrl;
 		}
+
+        /**
+         * @param $p_sUrl
+         *
+         * @return array
+         */
+		public function getParams()
+		{
+            $sUrl = $this->getUrl();
+            return $this->getParamsFor($sUrl);
+        }
+
+        /**
+         * @param $p_sUrl
+         *
+         * @return array
+         */
 		public function getParamsFor($p_sUrl)
 		{
 			$sUrl = strtolower($p_sUrl);
@@ -38,13 +61,24 @@ namespace DarkHelmet\Core
 			return $aParameters;
 		}
 //////////////////////////////// Public Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	static public function get($p_sUrl, Array $p_aPostFields){
+	    /**
+         * @static
+         * @param $p_sUrl
+         * @param array $p_aPostFields
+         * @return \DarkHelmet\Core\Request
+         */
+        static public function get($p_sUrl, Array $p_aPostFields){
 			$oInstance = new static;
+
 			$oInstance->setUrl($p_sUrl);
 			$oInstance->setPostFields($p_aPostFields);
-			return $oInstance;
-		}
 
+			return $oInstance;
+        }
+
+        /**
+         * @return string
+         */
 		public function __toString()
 		{
 			return (string) $this->getUrl();

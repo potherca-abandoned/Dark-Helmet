@@ -10,6 +10,7 @@ namespace DarkHelmet\Connectors\Local
 	use DarkHelmet\Core\Controllers\Tags;
 	use DarkHelmet\Core\TimeLog;
 	use DarkHelmet\Core\LogEntry;
+    use DarkHelmet\Core\Controllers\Base as BaseController;
 
 	use DarkHelmet\Connectors\Base;
 	use DarkHelmet\Connectors\Hooks\History     as HistoryHook;
@@ -62,7 +63,51 @@ namespace DarkHelmet\Connectors\Local
 
 		public function provideHistory(Context $p_oContext)
 		{
+            $aList = $this->getHistoryList();
 
+            $aKeys = array_keys($aList);
+            $sToday = array_search($p_oContext->get('sToday'), $aKeys);
+            $sCurrent = $sToday;
+
+            $p_oContext->set('keys', $aKeys);
+
+            $aParams = BaseController::getRequest()->getParamsFor($p_oContext->sBaseUrl);
+            if(isset($aParams[1])){
+                $sCurrent = $aParams[1];
+
+                if($p_oContext->get('sToday') !== $sCurrent){
+                    $oTimeLog = new TimeLog();
+                    $oTimeLog->setDate(new DateTime($sCurrent));
+                    $oTimeLog = $this->populateTimeLogFromFile($oTimeLog);
+
+                    $p_oContext->set('oTimeLog', $oTimeLog);
+                }#if
+            }#if
+            $p_oContext->set('current', $sCurrent);
+
+            $sCurrentKey = array_search($sCurrent, $aKeys);
+
+            //@TODO: Instead of setting the params here and having the buttons
+            //       in the main template we should use the UI API once it has
+            //       been implemented
+            if(isset($aKeys[$sCurrentKey+1])){
+                $p_oContext->set('previous', $aKeys[ $sCurrentKey===false?0:$sCurrentKey+1 ]);
+            }#if
+
+            if(isset($aKeys[$sCurrentKey-1])){
+                $p_oContext->set('next', $aKeys[$sCurrentKey-1]);
+            }#if
+
+            // get current thingy
+            // get list of all thingies
+            // get ID/location of current thingy in the list
+            // if current+1 - $p_oContext->set('next', nextID);
+            // if current-1 - $p_oContext->set('previous', previousID);
+
+             // If not the newest in the list
+            //$p_oContext->set('bShowForm', false);
+
+            return $p_oContext;
 		}
 
 		public function provideTagsFromHistory(Array $p_aTags, Context $p_oContext)

@@ -206,12 +206,12 @@ namespace DarkHelmet\Core\Controllers
 			try{
 				$oInstance->invokeHooks();
 			}
-			catch(Exception $oEception){
+			catch(Exception $oException){
 				// Kill any redirects
 				$oInstance->m_sRedirectUrl = null;
 
 				//Set error to be displayed
-				$oInstance->getContext()->set('sMessage', $oEception->getMessage());
+				$oInstance->getContext()->set('sMessage', $oException->getMessage());
 			}#try
 
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!
@@ -296,10 +296,14 @@ namespace DarkHelmet\Core\Controllers
 					}
 					$this->setTags($aTags);
 				}
-				else if($this instanceof HistoryHook && $t_oConnector instanceof ConnectorsHistoryHook){
+//				else
+
+                if($this instanceof HistoryHook && $t_oConnector instanceof ConnectorsHistoryHook){
 					$t_oConnector->provideHistory($oContext);
 				}
-				else if(
+//				else
+
+                if(
 					   $this->getRequest()->getPostFields() !== array() // can't use !empty()...
 					&& $this instanceof PersistenceHook
 				    && $t_oConnector instanceof Persistence
@@ -406,8 +410,12 @@ namespace DarkHelmet\Core\Controllers
 		/* *************************************************************** *
 						 THIS METHOD IS EVIL AND MUST DIE!!!
 		 * *************************************************************** */
+        /**
+         * @deprecated
+         */
 		protected function populateContext(Context $p_oContext, TimeLog $p_oTimeLog)
 		{
+		/*
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 		if(isset($sMessage)){
@@ -426,6 +434,7 @@ namespace DarkHelmet\Core\Controllers
 				$p_oContext->set('next', $keys[$current-1]);
 			}#if
 		}#if
+        */
 	}
 
 		protected function populateTimeLogFromPostData()
@@ -460,7 +469,7 @@ namespace DarkHelmet\Core\Controllers
 					$oTimeLog->addEntry($oLogEntry);
 				}#if
 			}#if
-			
+
 			return $oTimeLog;
 		}
 	}

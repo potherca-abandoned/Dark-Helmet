@@ -28,22 +28,27 @@ namespace DarkHelmet\Core\Controllers
 		{
 			// As everything is already set up here, all we need to do is pass
 			// everything to the template and let that do the work for us.
-			$this->getContext()
+            $oContext = $this->getContext();
+
+            $oContext
 				->setTemplate('main.html')
 				->set('bShowForm', false)
 				->set('sDate', $this->m_sDate)
 				->set('oDate', new DateTime($this->m_sDate))
-				->set('sMessage', 'History Listing has not been implemented yet.')
+//			$oContext	->set('sMessage', 'History Listing has not been implemented yet.')
 			;
 
-			return $this->buildTemplateOutputFromContext($this->getContext());
+//			return $this->buildTemplateOutputFromContext($this->getContext());
 ////////////////////////////////////////////////////////////////////////////////
 			$aHistory = array();
+
 			if(empty($this->m_sDate)){
 				// Show the History Listing
+                // To implement this we need to add another required method to the historyConnector interface that
+                // requires triggered HistoryProviders to provide a list we can then turn into <li><a href="history/$tag"></a></li>s
 				die('@TODO: Show History Listing...');
 			}
-			else if($this->m_sDate !== $this->m_sToday){
+			else if($this->m_sDate !== $oContext->get('sToday')){
 				foreach($this->getSettings()->getConnectors() as $t_oConnector){
 					if($t_oConnector instanceof History){
 						$aHistory = array_merge(
