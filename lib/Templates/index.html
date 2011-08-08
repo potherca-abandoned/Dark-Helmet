@@ -167,6 +167,10 @@
         }
         .previous {left: 50%;}
         .next {right: 50%;}
+
+		.no-form .next + .page {
+			margin-top: 5em;
+		}
     </style>
 
     <script type="text/javascript" src="_/jquery/jquery-1.4.1.min.js" tal:attributes="src string:${sBaseUrl}_/jquery/jquery-1.4.1.min.js"></script>
@@ -277,7 +281,7 @@
     </script>
 </head>
 
-<body>
+<body tal:attributes="class php: bShowForm ?'form':'no-form'">
     <h1><a href="../../" tal:attributes="href string:${sBaseUrl}">Hour logging</a></h1>
     <p tal:condition="exists:sMessage" tal:content="structure sMessage" class="warn no-numbering"
     >Error: ${sMessage}</p>

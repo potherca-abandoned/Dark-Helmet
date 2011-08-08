@@ -61,13 +61,20 @@ namespace DarkHelmet\Connectors\Local
 			return $this->provideTagsFromHistory($p_aTags, $p_oContext);
 		}
 
+		/**
+		 * @param \DarkHelmet\Core\Context $p_oContext
+		 * @return \DarkHelmet\Core\Context
+		 */
+		//@FIXME: Currently provideHistory is abused to add history navigation to the main page. The functionality that does this should be refactored to a UI alteration function
 		public function provideHistory(Context $p_oContext)
 		{
             $aList = $this->getHistoryList();
 
             $aKeys = array_keys($aList);
-            $sToday = array_search($p_oContext->get('sToday'), $aKeys);
-            $sCurrent = $sToday;
+            if(array_search($p_oContext->get('sToday'), $aKeys) === 0)
+            {
+	            $sCurrent = $p_oContext->get('sToday');
+            }
 
             $p_oContext->set('keys', $aKeys);
 
@@ -77,6 +84,7 @@ namespace DarkHelmet\Connectors\Local
 
                 if($p_oContext->get('sToday') !== $sCurrent){
                     $oTimeLog = new TimeLog();
+                    $oTimeLog->setTagPrefixes($p_oContext->get('aPrefix'));
                     $oTimeLog->setDate(new DateTime($sCurrent));
                     $oTimeLog = $this->populateTimeLogFromFile($oTimeLog);
 
@@ -90,22 +98,14 @@ namespace DarkHelmet\Connectors\Local
             //@TODO: Instead of setting the params here and having the buttons
             //       in the main template we should use the UI API once it has
             //       been implemented
+
             if(isset($aKeys[$sCurrentKey+1])){
-                $p_oContext->set('previous', $aKeys[ $sCurrentKey===false?0:$sCurrentKey+1 ]);
+                $p_oContext->set('previous', 'history/' . $aKeys[ $sCurrentKey===false?0:$sCurrentKey+1 ]);
             }#if
 
             if(isset($aKeys[$sCurrentKey-1])){
-                $p_oContext->set('next', $aKeys[$sCurrentKey-1]);
+                $p_oContext->set('next', $sCurrentKey-1 === 0 ?'':'history/' . $aKeys[$sCurrentKey-1]);
             }#if
-
-            // get current thingy
-            // get list of all thingies
-            // get ID/location of current thingy in the list
-            // if current+1 - $p_oContext->set('next', nextID);
-            // if current-1 - $p_oContext->set('previous', previousID);
-
-             // If not the newest in the list
-            //$p_oContext->set('bShowForm', false);
 
             return $p_oContext;
 		}

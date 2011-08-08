@@ -9,7 +9,7 @@
 
             <tal:block condition="exists: previous">
                 <a
-                   href="../../" tal:attributes="href string:${sBaseUrl}history/${previous}"
+                   href="../../" tal:attributes="href string:${sBaseUrl}${previous}"
                    class="nav previous"
                 >&lt;</a>
             </tal:block>
@@ -23,7 +23,7 @@
 
             <tal:block condition="exists: next">
                 <a
-                   href="../../" tal:attributes="href string:${sBaseUrl}history/${next}"
+                   href="../../" tal:attributes="href string:${sBaseUrl}${next}"
                    class="nav next"
                 >&gt;</a>
             </tal:block>
