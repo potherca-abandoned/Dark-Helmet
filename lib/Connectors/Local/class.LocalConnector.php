@@ -75,6 +75,10 @@ namespace DarkHelmet\Connectors\Local
             {
 	            $sCurrent = $p_oContext->get('sToday');
             }
+            else
+            {
+                    $sCurrent = null;
+            }
 
             $p_oContext->set('keys', $aKeys);
 
