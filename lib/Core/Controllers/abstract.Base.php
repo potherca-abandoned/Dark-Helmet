@@ -92,7 +92,7 @@ namespace DarkHelmet\Core\Controllers
 		}
 
 		/**
-		 * @return \DarkHelmet\Core\Context\Context
+		 * @return \DarkHelmet\Core\Context
 		 */
 		public function getContext()
 		{
@@ -404,6 +404,60 @@ namespace DarkHelmet\Core\Controllers
 			}#if
 
 			return $sOutput;
+		}
+
+		public function buildTags()
+		{
+			$aTags = $this->array_unique_multi($this->m_aTags);
+
+			if ($this->getContext()->offsetExists('sMessage')) {
+				$sMessage = $this->getContext()->get('sMessage');
+				if (!empty($sMessage)) {
+					$aTags = array_merge(
+						$aTags
+						, Tags::tagArray($this->getContext(), '__ERROR__', $sMessage, '')
+					);
+				}
+				#if
+			}
+			#if
+
+			// Sanitize Tags
+			foreach ($aTags as $t_iIndex => $t_aTag) {
+				//@WARNING: If there's an apostrophe (') in a value the JS hangs the browser.
+				//          Aparently there's more than just an ' that does that...
+
+				//@TODO: Move the sanatization to a method to remove Copy/Paste here!
+				if (strpos($t_aTag['caption'], '\'') !== false) {
+					$aTags[$t_iIndex]['caption'] = str_replace('\'', '`', $t_aTag['caption']); // Id use &apos; but PHP's html_entity_decode doesn't seem to support that...
+				}
+				#if
+
+				if (strpos($t_aTag['value'], '\'') !== false) {
+					$aTags[$t_iIndex]['value'] = str_replace('\'', "`", $t_aTag['value']);
+				}
+				#if
+			}
+			return $aTags;
+		}
+
+
+		private function array_unique_multi($p_aArray)
+		{
+			$aUniqueArray = array();
+			$aTempArray   = array();
+
+			foreach($p_aArray as $t_iKey => $t_mValue) {
+				$aTempArray[] = serialize($t_mValue);
+			}#foreach
+
+			$aTempArray = array_unique($aTempArray);
+
+			foreach($aTempArray as $t_iKey => $t_mValue) {
+				$aUniqueArray[] = unserialize($t_mValue);
+			}#foreach
+
+			return $aUniqueArray;
 		}
 
 //////////////// Refactor these Methods the Hell out of here !!! \\\\\\\\\\\\\\\
