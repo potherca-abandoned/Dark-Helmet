@@ -81,7 +81,8 @@ jQuery(
 
 							cache.push({
 								caption: option.text(),
-								value: option.val()
+								value: option.val(),
+/**/							addClass: option.attr('class')
 							});
 							search_string += "" + (cache.length - 1) + ":" + option.text() + ";";
 		                }

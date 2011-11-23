@@ -261,23 +261,32 @@
         })(jQuery);
 
 
-        $(document).ready(function() {
-            $tags = $("#tags");
-            if($tags.length > 0){
-                $tags.fcbkcomplete({
-                    json_url: "${sBaseUrl}tags/",
-                    cache: true,
-                    filter_case: false,
-                    filter_hide: true,
-                    firstselected: true,
-                    filter_selected: true,
-                    newel: true
-                });
+	$(document).ready(function() {
+		var $tags = $("#tags");
+		$.getJSON("${sBaseUrl}tags/", null, function(data){
+			var sContent;
+/**/			$.each(data, function(){
+				sContent += '<option class="' + this.addClass + '" value="' + this.value + '">' + this.caption + '<\/option>';
+			});
+/**/
+			$tags.append(sContent);
 
-                $("input")[0].focus();
-            }
-        });
-    /*]]>*/
+			if($tags.length > 0){
+				$tags.fcbkcomplete({
+					cache: true,
+					filter_case: false,
+					filter_hide: true,
+					firstselected: true,
+					filter_selected: true,
+					newel: true
+				});
+
+				$("input")[0].focus();
+			}
+		});
+
+	});
+	/*]]>*/
     </script>
 </head>
 
