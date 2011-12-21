@@ -72,9 +72,12 @@ namespace DarkHelmet\Connectors\Jira
 					$oClient = $this->getClient();
 					if($oClient !== null) {
 						try{
+							$this->startProgressOnTicket($oClient, $sTicketId);
+
+
 							// Write Logged time to ticked using the SOAP API
 							$oClient->addWorklogAndAutoAdjustRemainingEstimate (
-								$this->m_aConnector['oAuthentication']
+								  $this->m_aConnector['oAuthentication']
 								, $sTicketId
 								, array(
 							          'startDate' => $oTargetEntry->getTime()->format(DATE_ATOM)
@@ -104,6 +107,53 @@ namespace DarkHelmet\Connectors\Jira
 					}#if
 				}#if
 			}#if
+		}
+
+		protected function startProgressOnTicket(SoapClient $p_oClient, $p_sTicketId)
+		{
+			// Start Progress if it has not already been started
+			$oTicket = $p_oClient->getIssue($this->m_aConnector['oAuthentication'], $p_sTicketId);
+			if (isset($oTicket->status)) {
+				$aStatuses = $p_oClient->getStatuses($this->m_aConnector['oAuthentication']);
+
+				foreach ($aStatuses as $t_oStatus)
+				{
+					if ($t_oStatus->id === $oTicket->status) {
+						$oStatus = $t_oStatus;
+						break;
+					}
+					#if
+				}
+				#foreach
+
+				if (isset($oStatus) && $oStatus->name === 'Open') {
+					$aActions = $p_oClient->getAvailableActions($this->m_aConnector['oAuthentication'], $p_sTicketId);
+					foreach ($aActions as $t_oAction)
+					{
+						if ($t_oAction->name === 'Start Progress') {
+							$iAction = $t_oAction->id;
+						}
+						#if
+					}
+					#foreach
+
+					if (isset($iAction)) {
+						$sComment = '<started working on ticket>'. "\n"
+							. ' ---'. "\n" . ' logged via ' . __CLASS__
+						;
+
+						$p_oClient->progressWorkflowAction(
+							$this->m_aConnector['oAuthentication']
+							, $p_sTicketId
+							, $iAction
+							, array('comment' => $sComment)
+						);
+					}
+					#if
+				}
+				#if
+			}
+			#if
 		}
 
 		public function provideTags(Array $p_aTags, Context $p_oContext)

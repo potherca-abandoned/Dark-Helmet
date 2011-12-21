@@ -120,10 +120,16 @@ namespace DarkHelmet\Core
 					    $sMessage = substr($sMessage, 1);
 				    }
 
-				    $sHtml .=
-				          '<span' . (isset($sClass)?' class="'.$sClass.'"':'') . '>'
-					    . $sMessage
-					    . ' </span>'
+				    $sHtml .= '<span' . (isset($sClass)?' class="'.$sClass.'"':'') . '>';
+
+				    //@TODO: This should be fixed by allowing Plugins to register tag-ui alteration rules...    BMP/21/12/2011
+				    if($sClass === 'Ticket' && strpos($t_oEntry->getMessage(), '~JiraConnector') !==false)
+				    {
+					    $sMessage = '<a href="https://intern.vrestmedical.com/jira/browse/' . $sMessage. '" target="_BLANK">' . $sMessage. '</a>';
+				    }
+				    
+				    $sHtml .= $sMessage;
+				    $sHtml .= ' </span>';
 				    ;
 			    }
 
