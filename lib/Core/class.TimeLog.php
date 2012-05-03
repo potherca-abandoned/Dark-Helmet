@@ -185,10 +185,12 @@ namespace DarkHelmet\Core
 		    $aTotals = array(
 			    'ALL' => array()
 		    );
+			
+			$oTimeZone = new \DateTimeZone(date_default_timezone_get());
 
 		    //$this->calculateTotals();
 		    foreach($this->getEntries() as $t_iIndex => $t_oEntry){
-
+				
 			    $oNext = $this->getEntry($t_iIndex + 1);
 			    if($oNext !== null){
 				    $taskname = $t_oEntry->getMessage();
@@ -200,11 +202,13 @@ namespace DarkHelmet\Core
 					    // Tally Totals per Line
 					    if(!isset($aTotals['ALL'][$taskname])){
 						    $aTotals['ALL'][$taskname] = new DateTime('@0');
+							$aTotals['ALL'][$taskname]->setTimezone($oTimeZone);
 					    }#if
 					    $aTotals['ALL'][$taskname]->add($oDateInterval);
 
 					    if(!isset($aTotals['ALL']['__TOTAL__'])){
 						    $aTotals['ALL']['__TOTAL__'] = new DateTime('@0');
+							$aTotals['ALL']['__TOTAL__']->setTimezone($oTimeZone);
 					    }#if
 					    $aTotals['ALL']['__TOTAL__']->add($oDateInterval);
 
@@ -213,10 +217,12 @@ namespace DarkHelmet\Core
 						    if(!isset($aTotals[$t_sTagType])){
 							    $aTotals[$t_sTagType] = array();
 							    $aTotals[$t_sTagType]['__TOTAL__'] = new DateTime('@0');
+								$aTotals[$t_sTagType]['__TOTAL__']->setTimezone($oTimeZone);
 						    }#if
 
 						    if(!isset($aTotals[$t_sTagType][$t_sTagName])){
 							    $aTotals[$t_sTagType][$t_sTagName] = new DateTime('@0');
+								$aTotals[$t_sTagType][$t_sTagName]->setTimezone($oTimeZone);
 						    }#if
 
 						    $aTotals[$t_sTagType][$t_sTagName]->add($oDateInterval);
