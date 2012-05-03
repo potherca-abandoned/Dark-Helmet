@@ -73,7 +73,7 @@ namespace DarkHelmet\Connectors\Github
 
 					$sComment = (isset($aMessage['Comment'])
 							?   $aMessage['Comment']."\n"
-							:'<no coment>')
+							:'<no comment>')
 						. "\n" . ' ---'
 						. "\n" . ' logged via ' . __CLASS__ ;
 
