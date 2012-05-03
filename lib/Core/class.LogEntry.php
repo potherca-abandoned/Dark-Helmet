@@ -77,7 +77,7 @@ namespace DarkHelmet\Core
 			$this->time = $newTime;
 		}
 		// </editor-fold>
-		// <editor-fold defaultstate="collapsed" desc="Property strin DateTimeFormat">
+		// <editor-fold defaultstate="collapsed" desc="Property string DateTimeFormat">
 		private $dateTimeFormat = DateTime::ATOM;
 		/**
 		 * @return string
