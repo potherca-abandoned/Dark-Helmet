@@ -16,7 +16,15 @@
 
             <div class="page" tal:condition="bShowForm">
                 <form method="post" action="">
-                    <select name="tags" id="tags"></select>
+                    <select name="tags" id="tags" style="display: block;">
+						<option tal:condition="exists: aList"
+								tal:repeat="t_sList aList"
+   								tal:attributes="class repeat/t_sList/key;"
+						>
+							${t_sList}
+							${repeat/t_sList/key}
+						</option>
+                    </select>
                     <button type="submit" class="large">Send</button>
                 </form>
             </div>
