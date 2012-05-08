@@ -43,8 +43,9 @@ namespace DarkHelmet
 	);
 
 	define('PROJECT_DIR',   realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-	define('LOGS_DIR',      PROJECT_DIR  . 'logs/');
-	define('TEMPLATE_DIR',  PROJECT_DIR  . 'lib/Templates/');
+	define('LOGS_DIR',      PROJECT_DIR . 'logs/');
+	define('TEMPLATE_DIR',  PROJECT_DIR . 'lib/Templates/');
+	define('CONFIG_DIR',	PROJECT_DIR . 'config/');
 
 	require '3rd-party/PHPTAL/classes/PHPTAL.php'; // Template Autoloader
 
@@ -81,11 +82,42 @@ namespace DarkHelmet
 		$aPostFields = $_POST['tags'];
 	}
 	$oRequest  = Request::get($sUrl, $aPostFields);
-	$oSettings = Settings::loadFromFile(PROJECT_DIR.'settings.xml');
-	$oSettings->credentialsFromFile(PROJECT_DIR.'credentials.xml');
+	
+	// This is a temporary solution so people get informed that the config files have moved.
+	if(!is_file(CONFIG_DIR . 'settings.xml') && is_file(PROJECT_DIR . 'settings.xml')) {
+		// Configuration files are not yet moved. Inform the world!
+		
+		$oSettings = Settings::loadFromFile(PROJECT_DIR . 'settings.xml');
+		$sPredefined = '';
+		try {
+			$sPredefined = $oSettings->get('Connectors/Connector/Params/TagFilePath');
+		} catch(\Exception $ex) {
+			// Path not found, so not configured. Ignore.
+		}
+		
+		$sOutput  = '<h1>Important</h1>';
+		$sOutput .= '<p>The configuration files need to be moved from
+						the project root folder ( ' . PROJECT_DIR . ' )
+						into the config folder.<br/>
+						This concerns the following files:<p>';
+		$sOutput .= '<ul>
+						<li><strong>settings.xml</strong></li>
+						<li><strong>credentials.xml</strong></li>
+					</ul>';
+		if($sPredefined !== '') {
+			$sOutput .= '<p>If you also want to move <strong>'.$sPredefined.'</strong>
+						into the config folder, be sure to add the path to the file
+						name in settings.xml</p>';
+		}#if
+		$sOutput .= '<p>After you have moved the files, please reload this page.</p>';
+		
+	} else {
+		$oSettings = Settings::loadFromFile(CONFIG_DIR . 'settings.xml');
+		$oSettings->credentialsFromFile(CONFIG_DIR . 'credentials.xml');
 
-	$sOutput = BaseController::getResponse($oRequest, $oSettings);
-
+		$sOutput = BaseController::getResponse($oRequest, $oSettings);
+	}#if
+	
 	die ($sOutput);
 }
 

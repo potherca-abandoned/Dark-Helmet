@@ -53,7 +53,7 @@
             <Name>Predefined</Name>
             <Class>DarkHelmet\Connectors\Predefined\PredefinedConnector</Class>
             <Params>
-                <TagFilePath>Predefined.tags.json</TagFilePath>
+                <TagFilePath>config/Predefined.tags.json</TagFilePath>
             </Params>
         </Connector>
 

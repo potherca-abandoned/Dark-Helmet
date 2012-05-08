@@ -142,11 +142,24 @@ namespace DarkHelmet\Core
 			}
 		}
 
+		/**
+		 *
+		 * @param string $p_sFilePath
+		 * 
+		 * @return void
+		 */
 		public function credentialsFromFile($p_sFilePath)
 		{
 			$this->setCredentials(self::loadFromFile($p_sFilePath));
 		}
 
+		/**
+		 *
+		 * @param string $p_sFilePath
+		 * @param int $p_iOptions
+		 * 
+		 * @return \DarkHelmet\Core\Settings
+		 */
 		static public function loadFromFile($p_sFilePath, $p_iOptions = null)
 		{
 			//@TODO: replace $p_sFilePath by an splFileObject
