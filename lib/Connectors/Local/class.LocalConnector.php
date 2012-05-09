@@ -137,6 +137,9 @@ namespace DarkHelmet\Connectors\Local
 //				throw new \InvalidArgumentException('Could not find log for date "' . $p_oContext->get('sDate') . '"');
 //			}
 
+			$oToday = $p_oContext->getDate();
+			$oFirstDate = new \DateTime(sprintf('-%d days midnight', $iGoBack));
+			
 			//@TODO: Learn to work with DateTime objects instead of strings already, jeez! :-/
 			$sDate = $p_oContext->get('sToday');
 			$sFirstDate = date('Ymd', mktime(
@@ -149,6 +152,34 @@ namespace DarkHelmet\Connectors\Local
 			));
 
 			$aTags = array();
+
+			/*
+			 * Instead of looping over all files in the logs folder, we also could
+			 * create a DatePeriod and loop over all dates in that period. That way
+			 * we only need to check the number of days in $iGoBack, not all files in
+			 * the logs dir (potentially lots more)
+			 */
+			//*/
+			// @TODO: Validate that today is included in the period, also in other versions of PHP
+			$oPeriod = new \DatePeriod($oFirstDate, new \DateInterval('P1D'), $iGoBack);
+			$aLogs = array();
+			foreach($oPeriod as $t_oDate) {
+				$sLogFile = $this->m_sFilePrefix . $t_oDate->format('Ymd') . $this->m_sFileSuffix;
+				
+				if(file_exists($sLogsDir . $sLogFile)) {
+					$t_aContent = file($sLogsDir . $sLogFile, FILE_IGNORE_NEW_LINES);
+					
+					if($oToday == $t_oDate && count($t_aContent) >= 2) {
+						$t_sTask = $t_aContent[count($t_aContent)-2];
+						list(, $sLastTask) = explode(' ', $t_sTask, 2); // We're not interested in the first bit
+					}
+					
+					$aLogs = array_merge($aLogs, $t_aContent);
+				}
+			}
+			
+			/*/
+			
 
 			// Get all the logs from $p_sFirstDate to $p_sDate as a string.
 			$sLogs = '';
@@ -176,8 +207,10 @@ namespace DarkHelmet\Connectors\Local
 					}
 				}#if
 			}#foreach
-
+			
 			$aLogs = explode("\n", $sLogs);
+			
+			//*/
 
 			// Get all the tags and put them in the right category.
 			foreach($aLogs as $t_sLog) {
