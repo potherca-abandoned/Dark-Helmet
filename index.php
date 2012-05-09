@@ -45,7 +45,7 @@ namespace DarkHelmet
 	define('PROJECT_DIR',   realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 	define('LOGS_DIR',      PROJECT_DIR . 'logs/');
 	define('TEMPLATE_DIR',  PROJECT_DIR . 'lib/Templates/');
-	define('CONFIG_DIR',	PROJECT_DIR . 'config/');
+	define('CONFIG_DIR',	PROJECT_DIR . 'conf/');
 
 	require '3rd-party/PHPTAL/classes/PHPTAL.php'; // Template Autoloader
 
@@ -98,7 +98,7 @@ namespace DarkHelmet
 		$sOutput  = '<h1>Important</h1>';
 		$sOutput .= '<p>The configuration files need to be moved from
 						the project root folder ( ' . PROJECT_DIR . ' )
-						into the config folder.<br/>
+						into the conf folder.<br/>
 						This concerns the following files:<p>';
 		$sOutput .= '<ul>
 						<li><strong>settings.xml</strong></li>
@@ -106,7 +106,7 @@ namespace DarkHelmet
 					</ul>';
 		if($sPredefined !== '') {
 			$sOutput .= '<p>If you also want to move <strong>'.$sPredefined.'</strong>
-						into the config folder, be sure to add the path to the file
+						into the conf folder, be sure to add the path to the file
 						name in settings.xml</p>';
 		}#if
 		$sOutput .= '<p>After you have moved the files, please reload this page.</p>';
