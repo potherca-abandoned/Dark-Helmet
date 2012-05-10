@@ -154,13 +154,10 @@ namespace DarkHelmet\Connectors\Local
 			$aTags = array();
 
 			/*
-			 * Instead of looping over all files in the logs folder, we also could
-			 * create a DatePeriod and loop over all dates in that period. That way
-			 * we only need to check the number of days in $iGoBack, not all files in
-			 * the logs dir (potentially lots more)
+			 * Process the dates instead of the files, so the number of times we
+			 * need to access the file system is based on the amount of days,
+			 * not the amount of files.
 			 */
-			//*/
-			// @TODO: Validate that today is included in the period, also in other versions of PHP
 			$oPeriod = new \DatePeriod($oFirstDate, new \DateInterval('P1D'), $iGoBack);
 			$aLogs = array();
 			foreach($oPeriod as $t_oDate) {
@@ -177,40 +174,6 @@ namespace DarkHelmet\Connectors\Local
 					$aLogs = array_merge($aLogs, $t_aContent);
 				}
 			}
-			
-			/*/
-			
-
-			// Get all the logs from $p_sFirstDate to $p_sDate as a string.
-			$sLogs = '';
-			foreach(scandir($sLogsDir) as $t_sLog) {
-				if($t_sLog !== '.' && $t_sLog !== '..') {
-					$aMatches = array();
-
-					if(preg_match('#'.$this->m_sFilePrefix.'(\d{8})'.$this->m_sFileSuffix.'#', $t_sLog, $aMatches) !== 0) {
-						$iDate = (int) $aMatches[1];
-
-						$aLog = file($sLogsDir . $t_sLog, FILE_IGNORE_NEW_LINES);
-
-						if($iDate === (int)$sDate && count($aLog) > 2){
-							// get last-but-one line from logs
-							$task = $aLog[count($aLog)-2];
-							list($time, $sLastTask) = explode(' ', $task,2);
-						}
-
-						if(
-							$iDate >= (int) $sFirstDate
-							AND $iDate <= (int) $sDate
-						) {
-							$sLogs .= file_get_contents($sLogsDir . $t_sLog);
-						}#if
-					}
-				}#if
-			}#foreach
-			
-			$aLogs = explode("\n", $sLogs);
-			
-			//*/
 
 			// Get all the tags and put them in the right category.
 			foreach($aLogs as $t_sLog) {
