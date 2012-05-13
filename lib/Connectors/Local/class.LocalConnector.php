@@ -137,6 +137,9 @@ namespace DarkHelmet\Connectors\Local
 //				throw new \InvalidArgumentException('Could not find log for date "' . $p_oContext->get('sDate') . '"');
 //			}
 
+			$oToday = $p_oContext->getDate();
+			$oFirstDate = new \DateTime(sprintf('-%d days midnight', $iGoBack));
+			
 			//@TODO: Learn to work with DateTime objects instead of strings already, jeez! :-/
 			$sDate = $p_oContext->get('sToday');
 			$sFirstDate = date('Ymd', mktime(
@@ -150,34 +153,27 @@ namespace DarkHelmet\Connectors\Local
 
 			$aTags = array();
 
-			// Get all the logs from $p_sFirstDate to $p_sDate as a string.
-			$sLogs = '';
-			foreach(scandir($sLogsDir) as $t_sLog) {
-				if($t_sLog !== '.' && $t_sLog !== '..') {
-					$aMatches = array();
-
-					if(preg_match('#'.$this->m_sFilePrefix.'(\d{8})'.$this->m_sFileSuffix.'#', $t_sLog, $aMatches) !== 0) {
-						$iDate = (int) $aMatches[1];
-
-						$aLog = file($sLogsDir . $t_sLog, FILE_IGNORE_NEW_LINES);
-
-						if($iDate === (int)$sDate && count($aLog) > 2){
-							// get last-but-one line from logs
-							$task = $aLog[count($aLog)-2];
-							list($time, $sLastTask) = explode(' ', $task,2);
-						}
-
-						if(
-							$iDate >= (int) $sFirstDate
-							AND $iDate <= (int) $sDate
-						) {
-							$sLogs .= file_get_contents($sLogsDir . $t_sLog);
-						}#if
+			/*
+			 * Process the dates instead of the files, so the number of times we
+			 * need to access the file system is based on the amount of days,
+			 * not the amount of files.
+			 */
+			$oPeriod = new \DatePeriod($oFirstDate, new \DateInterval('P1D'), $iGoBack);
+			$aLogs = array();
+			foreach($oPeriod as $t_oDate) {
+				$sLogFile = $this->m_sFilePrefix . $t_oDate->format('Ymd') . $this->m_sFileSuffix;
+				
+				if(file_exists($sLogsDir . $sLogFile)) {
+					$t_aContent = file($sLogsDir . $sLogFile, FILE_IGNORE_NEW_LINES);
+					
+					if($oToday == $t_oDate && count($t_aContent) >= 2) {
+						$t_sTask = $t_aContent[count($t_aContent)-2];
+						list(, $sLastTask) = explode(' ', $t_sTask, 2); // We're not interested in the first bit
 					}
-				}#if
-			}#foreach
-
-			$aLogs = explode("\n", $sLogs);
+					
+					$aLogs = array_merge($aLogs, $t_aContent);
+				}
+			}
 
 			// Get all the tags and put them in the right category.
 			foreach($aLogs as $t_sLog) {

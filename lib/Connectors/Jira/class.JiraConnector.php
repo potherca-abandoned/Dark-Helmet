@@ -25,6 +25,8 @@ namespace DarkHelmet\Connectors\Jira
 //////////////////////////////// Public Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		/**
 		 * @param \DarkHelmet\Core\Context $p_oContext
+		 * 
+		 * @throws Exception 
 		 * @return void
 		 */
 		public function init(Context $p_oContext)
@@ -43,6 +45,13 @@ namespace DarkHelmet\Connectors\Jira
 			}#if
 		}
 
+		/**
+		 * @param TimeLog $p_oTimeLog
+		 * @param Context $p_oContext
+		 * 
+		 * @throws Exception 
+		 * @return void
+		 */
 		public function handlePersistenceFor(TimeLog $p_oTimeLog, Context $p_oContext)
 		{
 			$aEntries = $p_oTimeLog->getEntries();
@@ -109,6 +118,12 @@ namespace DarkHelmet\Connectors\Jira
 			}#if
 		}
 
+		/**
+		 * @param \SoapClient $p_oClient
+		 * @param string $p_sTicketId
+		 * 
+		 * @return void
+		 */
 		protected function startProgressOnTicket(SoapClient $p_oClient, $p_sTicketId)
 		{
 			// Start Progress if it has not already been started
@@ -156,6 +171,12 @@ namespace DarkHelmet\Connectors\Jira
 			#if
 		}
 
+		/**
+		 * @param array $p_aTags
+		 * @param Context $p_oContext
+		 * 
+		 * @return array 
+		 */
 		public function provideTags(Array $p_aTags, Context $p_oContext)
 		{
 			// http://docs.atlassian.com/software/jira/docs/api/rpc-jira-plugin/latest/com/atlassian/jira/rpc/soap/JiraSoapService.html
@@ -203,9 +224,12 @@ namespace DarkHelmet\Connectors\Jira
 		}
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		/**
+		 * @return \SoapClient 
+		 */
 		protected function getClient()
 		{
-			static $oClient;
+			static $oClient = null;
 
 			if($oClient === null){
 //					$rFilePointer = fsockopen($this->m_aConnector['Wsdl'], 80, $iError, $sError, 30);
@@ -237,37 +261,53 @@ namespace DarkHelmet\Connectors\Jira
 			return $oClient;
 		}
 
+		/**
+		 * @param \DateInterval $p_oDateInterval
+		 * 
+		 * @return int 
+		 */
 		protected function dateIntervalToSeconds(DateInterval $p_oDateInterval)
 		{
+			$iDays = $p_oDateInterval->days !== false ? $p_oDateInterval->days : $p_oDateInterval->d;
+			
+			// @CHECKME: This seems to skip minutes, is that intentional?
 			return
 				   $p_oDateInterval->s
 				+ ($p_oDateInterval->h * 60 *60)
-				+ ($p_oDateInterval->d * 24 * 60 * 60)
+				+ ($iDays * 24 * 60 * 60)
 //				+ ($p_oDateInterval->m * 30 * 24 * 60 * 60)
 //				+ ($p_oDateInterval->y * 365 * 24 * 60 * 60)
 			;
 		}
 
+		/**
+		 * @param \DateInterval $p_oDateInterval
+		 * 
+		 * @return string 
+		 */
         protected function getTimeStringFromDateInterval(DateInterval $p_oDateInterval)
         {
 			$sTime = '';
-
-			// Round up any seconds to one minute
+			
+			$iDays = $p_oDateInterval->days !== false ? $p_oDateInterval->days : $p_oDateInterval->d;
+			$iMinutes = $p_oDateInterval->i;
+			
+			// Round up any seconds to one minute without modifying the original object
 			if($p_oDateInterval->s > 0){
-				$p_oDateInterval->i = $p_oDateInterval->i + 1;
+				$iMinutes += 1;
 			}#if
 
 			//@NOTE: JIRA supports weeks, but we do not
-			if($p_oDateInterval->d > 0){
-				$sTime .= $p_oDateInterval->d . 'd ';
+			if($iDays > 0){
+				$sTime .= $iDays . 'd ';
 			}#if
 
 			if($p_oDateInterval->h > 0){
 				$sTime .= $p_oDateInterval->h . 'h ';
 			}#if
 
-			if($p_oDateInterval->i > 0){
-				$sTime .= $p_oDateInterval->i . 'm';
+			if($iMinutes > 0){
+				$sTime .= $iMinutes . 'm';
 			}#if
 
 			return $sTime;
