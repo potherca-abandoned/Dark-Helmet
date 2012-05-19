@@ -31,7 +31,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @covers Request::getPostFields
+	 * @covers \DarkHelmet\Core\Request::getPostFields
 	 */
 	public function getPostFields_ReturnsEmptyArray_WhenPostFieldsNotSet() {
 		$this->assertSame(array(), $this->object->getPostFields());
@@ -39,8 +39,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @covers Request::getPostFields
-	 * @covers Request::setPostFields
+	 * @covers \DarkHelmet\Core\Request::getPostFields
+	 * @covers \DarkHelmet\Core\Request::setPostFields
 	 */
 	public function getPostField_ReturnsArray_AfterArrayWasSet() {
 		$array = array('foo', 'bar', 'baz');
@@ -50,7 +50,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @covers Request::getUrl
+	 * @covers \DarkHelmet\Core\Request::getUrl
 	 */
 	public function getUrl_ReturnsEmptyString_WhenNoUrlSet() {
 		$this->assertSame('', $this->object->getUrl());
@@ -58,8 +58,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @covers Request::getUrl
-	 * @covers Request::setUrl
+	 * @covers \DarkHelmet\Core\Request::getUrl
+	 * @covers \DarkHelmet\Core\Request::setUrl
 	 */
 	public function getUrl_ReturnsPreviouslySetValue_AfterValueIsSet() {
 		$sUrl = '/foo/bar/baz';
@@ -121,7 +121,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @covers Request::get
+	 * @covers \DarkHelmet\Core\Request::get
 	 */
 	public function get_ReturnsRequestWithUrlAndParams_WhenCalled() {
 		$sUrl = '/lorem/ipsum/dolor/sit/amet';
@@ -136,7 +136,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @test
 	 * 
-	 * @covers Request::__toString
+	 * @covers \DarkHelmet\Core\Request::__toString
 	 */
 	public function __toString_ReturnsEmptyString_WhenNoUrlIsSet() {
 		$this->assertSame('', $this->object->__toString());
@@ -145,7 +145,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @test
 	 * 
-	 * @covers Request::__toString
+	 * @covers \DarkHelmet\Core\Request::__toString
 	 */
 	public function __toString_ReturnsStringWithUrl_WhenUrlIsSet() {
 		$sUrl = '/foo/bar/baz';
