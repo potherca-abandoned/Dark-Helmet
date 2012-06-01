@@ -424,23 +424,26 @@ namespace DarkHelmet\Core\Controllers
 
 			// Sanitize Tags
 			foreach ($aTags as $t_iIndex => $t_aTag) {
-				//@WARNING: If there's an apostrophe (') in a value the JS hangs the browser.
-				//          Aparently there's more than just an ' that does that...
-
-				//@TODO: Move the sanatization to a method to remove Copy/Paste here!
-				if (strpos($t_aTag['caption'], '\'') !== false) {
-					$aTags[$t_iIndex]['caption'] = str_replace('\'', '`', $t_aTag['caption']); // Id use &apos; but PHP's html_entity_decode doesn't seem to support that...
-				}
-				#if
-
-				if (strpos($t_aTag['value'], '\'') !== false) {
-					$aTags[$t_iIndex]['value'] = str_replace('\'', "`", $t_aTag['value']);
-				}
-				#if
+				$aTags[$t_iIndex]['caption'] = $this->sanitizeText($t_aTag['caption']);
+				$aTags[$t_iIndex]['value'] = $this->sanitizeText($t_aTag['value']);
 			}
+			
 			return $aTags;
 		}
-
+		
+		/**
+		 * Converts the input string into a string that is safe to use in html / json
+		 * 
+		 * @param string $p_sInput
+		 * 
+		 * @return string 
+		 */
+		protected function sanitizeText($p_sInput)
+		{
+			$sResult = htmlentities($p_sInput, ENT_QUOTES, 'UTF-8');
+			
+			return $sResult;
+		}
 
 		private function array_unique_multi($p_aArray)
 		{

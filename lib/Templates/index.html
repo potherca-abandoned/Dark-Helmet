@@ -269,12 +269,16 @@
 	$(document).ready(function() {
 		var $tags = $("#tags");
 		$.getJSON("${sBaseUrl}tags/", null, function(data){
-			var sContent;
-/**/			$.each(data, function(){
-				sContent += '<option class="' + this.addClass + '" value="' + this.value + '">' + this.caption + '<\/option>';
+
+			$.each(data, function(){
+				var tContent = $('<option></option>');
+
+				tContent.addClass(this.addClass);
+				tContent.val(this.value);
+				tContent.text(this.caption);
+
+				$tags.append(tContent);
 			});
-/**/
-			$tags.append(sContent);
 
 			if($tags.length > 0){
 				$tags.fcbkcomplete({
