@@ -163,17 +163,24 @@ namespace DarkHelmet\Connectors\Local
 			foreach($oPeriod as $t_oDate) {
 				$sLogFile = $this->m_sFilePrefix . $t_oDate->format('Ymd') . $this->m_sFileSuffix;
 				
-				if(file_exists($sLogsDir . $sLogFile)) {
+				if(is_readable($sLogsDir . $sLogFile)) {
+					// File is readable (and therefore does exists)
 					$t_aContent = file($sLogsDir . $sLogFile, FILE_IGNORE_NEW_LINES);
-					
+
 					if($oToday == $t_oDate && count($t_aContent) >= 2) {
 						$t_sTask = $t_aContent[count($t_aContent)-2];
 						list(, $sLastTask) = explode(' ', $t_sTask, 2); // We're not interested in the first bit
-					}
-					
+					}#if
+
 					$aLogs = array_merge($aLogs, $t_aContent);
-				}
-			}
+				} else if(file_exists($sLogsDir . $sLogFile)) {
+					// File does exist but is not readable.
+					throw new Exception(sprintf('Logfile "%s" is not readable', $sLogFile));
+				} else {
+					// File does not exist. This is ok (it just means there is no log for that day)
+					// so we can just skip this and continue.
+				}#if
+			}#foreach
 
 			// Get all the tags and put them in the right category.
 			foreach($aLogs as $t_sLog) {
@@ -250,13 +257,18 @@ namespace DarkHelmet\Connectors\Local
 			$sFilePath = $this->filePathForTimeLog($p_oTimeLog);
 
 			if(!file_exists($sFilePath)){
-				//Validate we have write access
+				//Validate we have write access to the folder
 				if(!is_writable(dirname($sFilePath))){
 					throw new Exception('The log Folder is not writable!');
 				}
 				else {
 					touch($sFilePath);
 				}
+			}
+			
+			// Now the file exists, validate we have write access to it
+			if(!is_writable($sFilePath)) {
+				throw new Exception(sprintf('The log file "%s" is not writable!', $sFilePath));
 			}
 
 			$oLogFile = new SplFileObject($sFilePath, 'w+');

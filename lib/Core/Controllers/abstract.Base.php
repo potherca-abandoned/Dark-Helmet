@@ -153,7 +153,7 @@ namespace DarkHelmet\Core\Controllers
 			$this->m_oTimeLog = new TimeLog();
 			$this->m_oContext = new Context();
 		}
-
+		
 		final static public function getResponse(Request $p_oRequest, Settings $p_oSettings)
 		{
 
@@ -226,6 +226,13 @@ namespace DarkHelmet\Core\Controllers
 			}#if
 
 		}
+		
+		/**
+		 * Returns the text (html) that is to be sent to the browser
+		 * 
+		 * @return string
+		 */
+		abstract public function buildOutput();
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		protected function invokeHookFor(\ReflectionMethod $t_oMethodReflector){
@@ -355,11 +362,16 @@ namespace DarkHelmet\Core\Controllers
 
 			$sClass = 'DarkHelmet\Core\Controllers\\' . ucfirst($sCall);
 
-			if(!is_callable($sClass, '__constructor')){
+			// Creating a ReflectionClass for a non-existing class throws exceptions
+			try {
+				$oReflector = new \ReflectionClass($sClass);
+			} catch(\Exception $ex) {
 				throw new Exception('404 - ' . $sCall);
 			}
-
-			$oReflector = new \ReflectionClass($sClass);
+			
+			if(! $oReflector->isInstantiable()) {
+				throw new Exception('404 - ' . $sCall);
+			}
 
 			$oInstance = $oReflector->newInstanceArgs($aParameters);
 
@@ -462,37 +474,6 @@ namespace DarkHelmet\Core\Controllers
 
 			return $aUniqueArray;
 		}
-
-//////////////// Refactor these Methods the Hell out of here !!! \\\\\\\\\\\\\\\
-		/* *************************************************************** *
-						 THIS METHOD IS EVIL AND MUST DIE!!!
-		 * *************************************************************** */
-        /**
-         * @deprecated
-         */
-		protected function populateContext(Context $p_oContext, TimeLog $p_oTimeLog)
-		{
-		/*
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-		if(isset($sMessage)){
-			$p_oContext->set('sMessage', $sMessage);
-		}
-		else{
-			$p_oContext->set('oTimeLog', $p_oTimeLog);
-			$keys = array_keys($this->m_aLogFiles);
-			$current = array_search($this->m_sDate, $keys);
-			$p_oContext->set('keys', $keys);
-			$p_oContext->set('current', $current);
-			if(isset($keys[$current+1])){
-				$p_oContext->set('previous', $keys[$current+1]);
-			}#if
-			if(isset($keys[$current-1])){
-				$p_oContext->set('next', $keys[$current-1]);
-			}#if
-		}#if
-        */
-	}
 
 		protected function populateTimeLogFromPostData()
 		{
