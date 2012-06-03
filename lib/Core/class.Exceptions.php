@@ -8,6 +8,8 @@ namespace DarkHelmet\Core
 	// General Application Exceptions
 	class Exception extends BaseException {}
 
+    class DeprecatedException extends BaseException {}
+
 	// Specific Application Exceptions
 	class TimeLogException extends BaseException {}
 

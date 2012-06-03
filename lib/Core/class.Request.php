@@ -36,24 +36,35 @@ namespace DarkHelmet\Core
 		}
 
         /**
-         * @param $p_sUrl
+         * @deprecated Has been deprecated as the plugins make it ambiguous what the base-url is. Use getParamsFor() instead.
          *
          * @return array
          */
 		public function getParams()
 		{
-            $sUrl = $this->getUrl();
-            return $this->getParamsFor($sUrl);
+            throw new DeprecatedException('Use getParamsFor() instead');
         }
 
         /**
-         * @param $p_sUrl
+         * Get the parameters from the Request for a given base URL.
+         *
+         * Imagine that the application is reachable online at
+         *  http://example.com/DarkHelmet and a plugin called 'foo' has an
+         * action method called 'bar' that is called with a parameters 'baz',
+         * 'biz' and 'boz', then the URL for the current request would be
+         * '/DarkHelmet/foo/bar/baz/biz/boz'.
+         *
+         * To get the parameters for the 'bar' action method we would call this
+         * method like this: $oRequest->getParamsFor('/foo/bar'); and we would
+         * receive array('baz', 'biz', 'boz').
+         *
+         * @param $p_sBaseUrl
          *
          * @return array
          */
-		public function getParamsFor($p_sUrl)
+		public function getParamsFor($p_sBaseUrl)
 		{
-			$sUrl = strtolower($p_sUrl);
+			$sUrl = strtolower($p_sBaseUrl);
 			$iStart = strpos($this->m_sUrl, $sUrl) + strlen($sUrl);
 			$sParameters = substr($this->m_sUrl, $iStart);
 			$aParameters = preg_split('#/#', $sParameters, null, PREG_SPLIT_NO_EMPTY);
