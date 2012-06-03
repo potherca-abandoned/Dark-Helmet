@@ -68,57 +68,35 @@ class RequestTest extends \TestCase {
 		$this->object->setUrl($sUrl);
 		$this->assertSame($sUrl, $this->object->getUrl());
 	}
-	
-	/**
-	 * @test
-	 * 
-	 * @FIXME: This test fails. Is the test wrong, or the implementation?
-	 */
-	public function getParamsFor_ReturnsArrayOfParts_WhenStringGiven() {
-		$sInput = '/foo/bar/baz';
-		$aExpected = array('foo', 'bar', 'baz');
-		$this->object->setUrl($sInput);
-		$this->assertSame($aExpected, $this->object->getParamsFor($sInput));
-	}
-	
-	/**
-	 * @test
-	 */
-	public function getParamsFor_ReturnsArrayWithoutEmptyParts_WhenStringWithEmptyPartsGiven() {
-		$sInput = '/foo//bar//baz';
-		$aExpected = array('foo', 'bar', 'baz');
-		$this->object->setUrl($sInput);
-		$this->assertSame($aExpected, $this->object->getParamsFor($sInput));
-	}
-	
-	/**
-	 * @test
-	 */
-	public function getParams_ReturnsArrayOfParts_WhenCalledAfterPathIsSet() {
-		$sInput = '/foo/bar/baz';
-		$aExpected = array('foo', 'bar', 'baz');
-		$this->object->setUrl($sInput);
-		$this->assertSame($aExpected, $this->object->getParams());
-	}
-	
-	/**
-	 * @test
-	 */
-	public function getParams_ReturnsArrayWithoutEmptyParts_WhenCalledAfterPathWithEmptyPartsIsSet() {
-		$sInput = '/foo//bar//baz';
-		$aExpected = array('foo', 'bar', 'baz');
-		$this->object->setUrl($sInput);
-		$this->assertSame($aExpected, $this->object->getParams());
-	}
-	
-	/**
-	 * @test
-	 */
-	public function getParams_ReturnsArrayWithLowerCaseParts_WhenCalledAfterMixedCasePathIsSet() {
-		$sInput = '/FoO/bAr/BaZ';
-		$aExpected = array('foo', 'bar', 'baz');
-		$this->object->setUrl($sInput);
-		$this->assertSame($aExpected, $this->object->getParams());
+
+    /**
+     * @test
+     * @dataProvider dataProviderOfExampleBaseUrls
+     *
+     * @param $p_sBaseUrl
+     */
+	public function getParamsFor_ReturnsArrayOfParts_WhenStringGiven($p_sBaseUrl) {
+		$sInput = '/foo/bar/baz/biz/boz';
+		$aExpected = array('baz', 'biz', 'boz');
+
+        $this->object->setUrl($sInput);
+
+		$this->assertSame($aExpected, $this->object->getParamsFor($p_sBaseUrl));
+    }
+
+    /**
+     * @test
+     * @dataProvider dataProviderOfExampleBaseUrls
+     *
+     * @param $p_sBaseUrl
+     */
+	public function getParamsFor_ReturnsArrayWithoutEmptyParts_WhenStringWithEmptyPartsGiven($p_sBaseUrl) {
+        $sInput = '/foo/bar/baz//biz//boz';
+        $aExpected = array('baz', 'biz', 'boz');
+
+        $this->object->setUrl($sInput);
+
+        $this->assertSame($aExpected, $this->object->getParamsFor($p_sBaseUrl));
 	}
 	
 	/**
@@ -154,6 +132,17 @@ class RequestTest extends \TestCase {
 		$this->object->setUrl($sUrl);
 		$this->assertSame($sUrl, $this->object->__toString());
 	}
+
+    public function dataProviderOfExampleBaseUrls()
+    {
+        return array(
+            array('/foo/bar')
+        , array('/foo/bar/')
+        , array('foo/bar/')
+        , array('foo/bar')
+        );
+    }
+
 
 }
 
