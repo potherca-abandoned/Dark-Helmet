@@ -140,17 +140,6 @@ namespace DarkHelmet\Connectors\Local
 			$oToday = $p_oContext->getDate();
 			$oFirstDate = new \DateTime(sprintf('-%d days midnight', $iGoBack));
 			
-			//@TODO: Learn to work with DateTime objects instead of strings already, jeez! :-/
-			$sDate = $p_oContext->get('sToday');
-			$sFirstDate = date('Ymd', mktime(
-				  date('H')
-				, date('i')
-				, date('s')
-				, date('m')
-				, date('d') - $iGoBack
-				, date('Y')
-			));
-
 			$aTags = array();
 
 			/*
