@@ -446,13 +446,21 @@ namespace DarkHelmet\Core\Controllers
 		/**
 		 * Converts the input string into a string that is safe to use in html / json
 		 * 
+		 * @TODO: Improve this method. Maybe use different methods for caption and value? // AK - 2012-06-05
+		 * 
 		 * @param string $p_sInput
 		 * 
 		 * @return string 
 		 */
 		protected function sanitizeText($p_sInput)
 		{
-			$sResult = htmlentities($p_sInput, ENT_QUOTES, 'UTF-8');
+			$sResult = $p_sInput;
+			
+			// Single quotes seem to cause the browser to hang or respond very slowly.
+			$sResult = str_replace("'", '`', $sResult);
+			// Double quotes cause invalid html, resulting in parts of the string missing.
+			// This solution is not perfect, it hampers search methods.
+			$sResult = str_replace('"', '&quot;', $sResult);
 			
 			return $sResult;
 		}
