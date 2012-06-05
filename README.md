@@ -1,5 +1,6 @@
 #Once upon a time warp in deep space, the struggle between the nice & the rotten goes on...
-Or to be more precise, the struggle between Those Who Want To Get Things Done & Those Who Want To Know How Long It Took Them...
+![Build Status][build_status]
+Or to be more precise, the struggle between Those Who Want To Get Things Done & Those Who Want To Know How Long It Took Them... 
 
 ## Premise
 When logging time spent on work, I have gotten used to logging what I intendtto do _up front_. That saves me all the hassle of having to try and remember once I am done doing something and helps me stay more focussed on the task at hand.
@@ -18,3 +19,7 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 ![Dark Helmet][dark_helmet]
 
 [dark_helmet]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"
+[build_status]: http://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
+
+
+
