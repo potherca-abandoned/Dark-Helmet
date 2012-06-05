@@ -153,7 +153,7 @@ namespace DarkHelmet\Core\Controllers
 			$this->m_oTimeLog = new TimeLog();
 			$this->m_oContext = new Context();
 		}
-
+		
 		final static public function getResponse(Request $p_oRequest, Settings $p_oSettings)
 		{
 
@@ -226,6 +226,13 @@ namespace DarkHelmet\Core\Controllers
 			}#if
 
 		}
+		
+		/**
+		 * Returns the text (html) that is to be sent to the browser
+		 * 
+		 * @return string
+		 */
+		abstract public function buildOutput();
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		protected function invokeHookFor(\ReflectionMethod $t_oMethodReflector){
@@ -355,11 +362,16 @@ namespace DarkHelmet\Core\Controllers
 
 			$sClass = 'DarkHelmet\Core\Controllers\\' . ucfirst($sCall);
 
-			if(!is_callable($sClass, '__constructor')){
+			// Creating a ReflectionClass for a non-existing class throws exceptions
+			try {
+				$oReflector = new \ReflectionClass($sClass);
+			} catch(\Exception $ex) {
 				throw new Exception('404 - ' . $sCall);
 			}
-
-			$oReflector = new \ReflectionClass($sClass);
+			
+			if(! $oReflector->isInstantiable()) {
+				throw new Exception('404 - ' . $sCall);
+			}
 
 			$oInstance = $oReflector->newInstanceArgs($aParameters);
 
@@ -424,23 +436,34 @@ namespace DarkHelmet\Core\Controllers
 
 			// Sanitize Tags
 			foreach ($aTags as $t_iIndex => $t_aTag) {
-				//@WARNING: If there's an apostrophe (') in a value the JS hangs the browser.
-				//          Aparently there's more than just an ' that does that...
-
-				//@TODO: Move the sanatization to a method to remove Copy/Paste here!
-				if (strpos($t_aTag['caption'], '\'') !== false) {
-					$aTags[$t_iIndex]['caption'] = str_replace('\'', '`', $t_aTag['caption']); // Id use &apos; but PHP's html_entity_decode doesn't seem to support that...
-				}
-				#if
-
-				if (strpos($t_aTag['value'], '\'') !== false) {
-					$aTags[$t_iIndex]['value'] = str_replace('\'', "`", $t_aTag['value']);
-				}
-				#if
+				$aTags[$t_iIndex]['caption'] = $this->sanitizeText($t_aTag['caption']);
+				$aTags[$t_iIndex]['value'] = $this->sanitizeText($t_aTag['value']);
 			}
+			
 			return $aTags;
 		}
-
+		
+		/**
+		 * Converts the input string into a string that is safe to use in html / json
+		 * 
+		 * @TODO: Improve this method. Maybe use different methods for caption and value? // AK - 2012-06-05
+		 * 
+		 * @param string $p_sInput
+		 * 
+		 * @return string 
+		 */
+		protected function sanitizeText($p_sInput)
+		{
+			$sResult = $p_sInput;
+			
+			// Single quotes seem to cause the browser to hang or respond very slowly.
+			$sResult = str_replace("'", '`', $sResult);
+			// Double quotes cause invalid html, resulting in parts of the string missing.
+			// This solution is not perfect, it hampers search methods.
+			$sResult = str_replace('"', '&quot;', $sResult);
+			
+			return $sResult;
+		}
 
 		private function array_unique_multi($p_aArray)
 		{
@@ -459,37 +482,6 @@ namespace DarkHelmet\Core\Controllers
 
 			return $aUniqueArray;
 		}
-
-//////////////// Refactor these Methods the Hell out of here !!! \\\\\\\\\\\\\\\
-		/* *************************************************************** *
-						 THIS METHOD IS EVIL AND MUST DIE!!!
-		 * *************************************************************** */
-        /**
-         * @deprecated
-         */
-		protected function populateContext(Context $p_oContext, TimeLog $p_oTimeLog)
-		{
-		/*
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-		if(isset($sMessage)){
-			$p_oContext->set('sMessage', $sMessage);
-		}
-		else{
-			$p_oContext->set('oTimeLog', $p_oTimeLog);
-			$keys = array_keys($this->m_aLogFiles);
-			$current = array_search($this->m_sDate, $keys);
-			$p_oContext->set('keys', $keys);
-			$p_oContext->set('current', $current);
-			if(isset($keys[$current+1])){
-				$p_oContext->set('previous', $keys[$current+1]);
-			}#if
-			if(isset($keys[$current-1])){
-				$p_oContext->set('next', $keys[$current-1]);
-			}#if
-		}#if
-        */
-	}
 
 		protected function populateTimeLogFromPostData()
 		{

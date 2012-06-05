@@ -137,47 +137,39 @@ namespace DarkHelmet\Connectors\Local
 //				throw new \InvalidArgumentException('Could not find log for date "' . $p_oContext->get('sDate') . '"');
 //			}
 
-			//@TODO: Learn to work with DateTime objects instead of strings already, jeez! :-/
-			$sDate = $p_oContext->get('sToday');
-			$sFirstDate = date('Ymd', mktime(
-				  date('H')
-				, date('i')
-				, date('s')
-				, date('m')
-				, date('d') - $iGoBack
-				, date('Y')
-			));
-
+			$oToday = $p_oContext->getDate();
+			$oFirstDate = new \DateTime(sprintf('-%d days midnight', $iGoBack));
+			
 			$aTags = array();
 
-			// Get all the logs from $p_sFirstDate to $p_sDate as a string.
-			$sLogs = '';
-			foreach(scandir($sLogsDir) as $t_sLog) {
-				if($t_sLog !== '.' && $t_sLog !== '..') {
-					$aMatches = array();
+			/*
+			 * Process the dates instead of the files, so the number of times we
+			 * need to access the file system is based on the amount of days,
+			 * not the amount of files.
+			 */
+			$oPeriod = new \DatePeriod($oFirstDate, new \DateInterval('P1D'), $iGoBack);
+			$aLogs = array();
+			foreach($oPeriod as $t_oDate) {
+				$sLogFile = $this->m_sFilePrefix . $t_oDate->format('Ymd') . $this->m_sFileSuffix;
+				
+				if(is_readable($sLogsDir . $sLogFile)) {
+					// File is readable (and therefore does exists)
+					$t_aContent = file($sLogsDir . $sLogFile, FILE_IGNORE_NEW_LINES);
 
-					if(preg_match('#'.$this->m_sFilePrefix.'(\d{8})'.$this->m_sFileSuffix.'#', $t_sLog, $aMatches) !== 0) {
-						$iDate = (int) $aMatches[1];
+					if($oToday == $t_oDate && count($t_aContent) >= 2) {
+						$t_sTask = $t_aContent[count($t_aContent)-2];
+						list(, $sLastTask) = explode(' ', $t_sTask, 2); // We're not interested in the first bit
+					}#if
 
-						$aLog = file($sLogsDir . $t_sLog, FILE_IGNORE_NEW_LINES);
-
-						if($iDate === (int)$sDate && count($aLog) > 2){
-							// get last-but-one line from logs
-							$task = $aLog[count($aLog)-2];
-							list($time, $sLastTask) = explode(' ', $task,2);
-						}
-
-						if(
-							$iDate >= (int) $sFirstDate
-							AND $iDate <= (int) $sDate
-						) {
-							$sLogs .= file_get_contents($sLogsDir . $t_sLog);
-						}#if
-					}
+					$aLogs = array_merge($aLogs, $t_aContent);
+				} else if(file_exists($sLogsDir . $sLogFile)) {
+					// File does exist but is not readable.
+					throw new Exception(sprintf('Logfile "%s" is not readable', $sLogFile));
+				} else {
+					// File does not exist. This is ok (it just means there is no log for that day)
+					// so we can just skip this and continue.
 				}#if
 			}#foreach
-
-			$aLogs = explode("\n", $sLogs);
 
 			// Get all the tags and put them in the right category.
 			foreach($aLogs as $t_sLog) {
@@ -254,13 +246,18 @@ namespace DarkHelmet\Connectors\Local
 			$sFilePath = $this->filePathForTimeLog($p_oTimeLog);
 
 			if(!file_exists($sFilePath)){
-				//Validate we have write access
+				//Validate we have write access to the folder
 				if(!is_writable(dirname($sFilePath))){
 					throw new Exception('The log Folder is not writable!');
 				}
 				else {
 					touch($sFilePath);
 				}
+			}
+			
+			// Now the file exists, validate we have write access to it
+			if(!is_writable($sFilePath)) {
+				throw new Exception(sprintf('The log file "%s" is not writable!', $sFilePath));
 			}
 
 			$oLogFile = new SplFileObject($sFilePath, 'w+');

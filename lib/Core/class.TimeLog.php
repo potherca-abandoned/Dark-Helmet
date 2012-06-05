@@ -14,14 +14,27 @@ namespace DarkHelmet\Core
 
 	    private $m_aEntries  = array();
 	    private $m_aPrefixes = array();
+		
+		/**
+		 * Whether or not the entries are sorted.
+		 * 
+		 * @var boolean
+		 */
+		private $m_bEntriesSorted = true;
 
 ////////////////////////////// Getters and Setters \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	    /**
+		 * Returns all entries. The returned array is guaranteed to be sorted
+		 * 
 	     * @return array
 	     */
 	    public function getEntries()
 	    {
-		    $this->sortByDate();
+			if($this->getEntriesSorted() === false)
+			{
+				$this->sortByDate();
+				$this->setEntriesSorted(true);
+			}
 		    return $this->m_aEntries;
 	    }
 
@@ -32,6 +45,7 @@ namespace DarkHelmet\Core
 	    public function addEntry(LogEntry $p_oEntry)
 	    {
 		    $this->m_aEntries[] = $p_oEntry;
+			$this->m_bEntriesSorted = false;
 	    }
 
 	    /**
@@ -63,21 +77,44 @@ namespace DarkHelmet\Core
 		    return $this->m_aPrefixes;
 	    }
 
-	    /**
-	     * @return array
-	     */
-	    public function setDate(DateTime $p_oDate)
+		/**
+		 * @param DateTime $p_oDate
+		 */
+		public function setDate(DateTime $p_oDate)
 	    {
-		    return $this->m_oDate = $p_oDate;
+		    $this->m_oDate = $p_oDate;
 	    }
 
 	    /**
-	     * @return array
+	     * @return DateTime
 	     */
 	    public function getDate()
 	    {
 		    return $this->m_oDate;
 	    }
+		
+		/**
+		 * Returns whether the array of entries is currently sorted.
+		 * 
+		 * @return boolean
+		 */
+		protected function getEntriesSorted()
+		{
+			return $this->m_bEntriesSorted;
+		}
+		
+		/**
+		 * Sets whether or not the array of entries is currently sorted
+		 *
+		 * @param boolean $p_bSorted 
+		 */
+		protected function setEntriesSorted($p_bSorted)
+		{
+			if(! is_bool($p_bSorted)) {
+				throw new InvalidArgumentException(__FUNCTION__ . ' expects a boolean');
+			}
+			$this->m_bEntriesSorted = $p_bSorted;
+		}
 
 //////////////////////////////// Public Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	    public function toString()
