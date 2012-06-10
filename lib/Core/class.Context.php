@@ -25,6 +25,8 @@ namespace DarkHelmet\Core
 	{
 ////////////////////////////////// Properties \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		private $m_sTemplate;
+		
+		private $m_aMessages = array();
 
 ////////////////////////////// Getters and Setters \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		/**
@@ -70,6 +72,21 @@ namespace DarkHelmet\Core
 		{
 			$aPrefixes = $this->getTagPrefixes();
 			return $aPrefixes[$p_sName];
+		}
+		
+		public function getMessages()
+		{
+			return $this->get('m_aMessages');
+		}
+		
+		protected function setMessages(array $p_aMessages)
+		{
+			$this->set('m_aMessages', $p_aMessages);
+		}
+		
+		public function addMessage(Message $p_oMessage)
+		{
+			$this->m_aMessages[] = $p_oMessage;
 		}
 
 		/**
@@ -165,7 +182,7 @@ namespace DarkHelmet\Core
 
 			return $oContext;
 		}
-
+		
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	}
 }

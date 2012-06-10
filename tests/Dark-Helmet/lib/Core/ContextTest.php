@@ -137,6 +137,33 @@ class ContextTest extends \TestCase {
 	
 	/**
 	 * @test
+	 * @covers DarkHelmet\Core\Context::getMessages
+	 */
+	public function getMessages_ReturnsEmptyArray_WhenNoMessagesSet() {
+		$this->assertSame(array(), $this->object->getMessages());
+	}
+	
+	/**
+	 * @test
+	 * @covers DarkHelmet\Core\Context::addMessage
+	 * @covers DarkHelmet\Core\Context::getMessages
+	 */
+	public function addMessage_AddsTwoMessagesToList_WhenCalledTwice() {
+		$oFirstMessage = new Message('1');
+		$oSecondMessage = new Message('2');
+		
+		$this->assertSame(array(), $this->object->getMessages());
+		$this->object->addMessage($oFirstMessage);
+		$this->object->addMessage($oSecondMessage);
+		
+		$aMessages = $this->object->getMessages();
+		$this->assertSame(2, count($aMessages));
+		$this->assertTrue(in_array($oFirstMessage, $aMessages));
+		$this->assertTrue(in_array($oSecondMessage, $aMessages));
+	}
+	
+	/**
+	 * @test
 	 * @covers DarkHelmet\Core\Context::get
 	 * @expectedException \PHPTAL_VariableNotFoundException
 	 */
