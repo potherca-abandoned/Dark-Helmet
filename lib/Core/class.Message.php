@@ -50,6 +50,30 @@ namespace DarkHelmet\Core
 			$this->sText = $newText;
 		}
 		// </editor-fold>
+		
+		/**
+		 * Returns the text corresponding to the severity for this message.
+		 *
+		 * @return string
+		 * @throws Exception 
+		 */
+		public function getSeverityText() {
+			$result = '';
+			switch($this->getSeverity()) {
+				case self::SEVERITY_NOTICE:
+					$result = 'Notice';
+					break;
+				case self::SEVERITY_WARNING:
+					$result = 'Warning';
+					break;
+				case self::SEVERITY_ERROR:
+					$result = 'Error';
+					break;
+				default:
+					throw new Exception('Unknown severity');
+			}
+			return $result;
+		}
 
 		/**
 		 *

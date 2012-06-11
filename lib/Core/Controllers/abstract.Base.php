@@ -211,9 +211,9 @@ namespace DarkHelmet\Core\Controllers
 				$oInstance->m_sRedirectUrl = null;
 
 				//Set error to be displayed
-				$oInstance->getContext()->set('sMessage', $oException->getMessage());
+				$oInstance->getContext()->addMessage(new \DarkHelmet\Core\Message($oException->getMessage()));
 			}#try
-
+			
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!
 			$sOutput = $oInstance->buildOutput();
 			if(isset($oInstance->m_sRedirectUrl)){

@@ -26,8 +26,6 @@ namespace DarkHelmet\Core
 ////////////////////////////////// Properties \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		private $m_sTemplate;
 		
-		private $m_aMessages = array();
-
 ////////////////////////////// Getters and Setters \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		/**
 		 * @return \DateTime
@@ -76,17 +74,19 @@ namespace DarkHelmet\Core
 		
 		public function getMessages()
 		{
-			return $this->get('m_aMessages');
+			return $this->get('aMessages');
 		}
 		
 		protected function setMessages(array $p_aMessages)
 		{
-			$this->set('m_aMessages', $p_aMessages);
+			$this->set('aMessages', $p_aMessages);
 		}
 		
 		public function addMessage(Message $p_oMessage)
 		{
-			$this->m_aMessages[] = $p_oMessage;
+			$aMessages = $this->getMessages();
+			$aMessages[] = $p_oMessage;
+			$this->setMessages($aMessages);
 		}
 
 		/**
@@ -120,6 +120,14 @@ namespace DarkHelmet\Core
 			parent::__set($p_sVarName, $p_mValue);
 
 			return $this;
+		}
+		
+		/**
+		 * Initializes the messages array
+		 */
+		public function __construct() {
+			parent::__construct();
+			$this->setMessages(array());
 		}
 
 /////////////////////////// ArrayAccess Implementation \\\\\\\\\\\\\\\\\\\\\\\\\
