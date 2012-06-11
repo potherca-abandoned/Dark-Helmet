@@ -301,8 +301,11 @@
 
 <body tal:attributes="class php: bShowForm ?'form':'no-form'">
     <h1><a href="../../" tal:attributes="href string:${sBaseUrl}">Hour logging</a></h1>
-    <p tal:condition="exists:sMessage" tal:content="structure sMessage" class="warn no-numbering"
-    >Error: ${sMessage}</p>
+	<ul tal:condition="aMessages" class="no-bullets messages">
+		<li tal:repeat="t_oMessage aMessages" class="warn">
+			${t_oMessage/getSeverityText}: ${t_oMessage/getText}
+		</li>
+	</ul>
 
 <tal:block metal:define-slot="content">
 </tal:block>
