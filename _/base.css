@@ -169,9 +169,20 @@ body {
     border-top: 2px solid #FF2424;
     border-bottom: 2px solid #FF2424;
     color: #600;
-    padding: 5px 20px 0px 45px;
+    padding: 5px 20px 5px 45px;
     text-align: left;
     white-space: normal;
+	margin-bottom: 2px;
+}
+
+.no-bullets {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.messages li {
+	font-size: 1em;
 }
 
 /*         JAVASCRIPT ENHANCED ELEMENTS
