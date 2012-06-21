@@ -14,6 +14,11 @@ namespace DarkHelmet\Connectors\Github
 	use DarkHelmet\Connectors\Hooks\Tags        as TagsHook;
 	use DarkHelmet\Connectors\Hooks\Init        as InitHook;
 
+	/**
+	 * Connect to tickets on Github through the Web API
+	 *
+	 * @method getShortName
+	 */
 	class GithubConnector extends Base implements InitHook, TagsHook
 	{
 ////////////////////////////////// Properties \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -44,6 +49,8 @@ namespace DarkHelmet\Connectors\Github
 		}
 
 		/*
+		 * @TODO: Implement GithubConnector::handlePersistenceFor()		BMP/2012/06/21
+		 *
 		 * As long as this class does not implement the Persistence Hook this
 		 * will not get called.
 		 *
@@ -52,36 +59,40 @@ namespace DarkHelmet\Connectors\Github
 		 * be done through the commit message... Although we could, of course,
 		 * always add a comment if one is provided?
 		 */
-		public function handlePersistenceFor(TimeLog $p_oTimeLog, Context $p_oContext)
+		public function handlePersistenceFor()//TimeLog $p_oTimeLog, Context $p_oContext)
 		{
-			$aEntries = $p_oTimeLog->getEntries();
+			throw new \BadMethodCallException(__METHOD__ . ' has not been implemented yet.');
 
-			//@TODO: The following code is copy/paste straight from the JiraConnector,
-			//       Maybe there should be an utility method in Base that gives us this
-			//       info?
-			if(count($aEntries) > 1){
-				$oLastEntry   = array_pop($aEntries);
-				$oTargetEntry = array_pop($aEntries);
-
-				$aMessage = $oTargetEntry->toArray($p_oContext->getTagPrefixes());
-
-				if(
-					isset($aMessage['Meta']) && $aMessage['Meta'] === $this->getShortName()
-					&& isset($aMessage['Ticket'])  // No number, no service
-				) {
-					$oDateInterval = $oTargetEntry->getTime()->diff($oLastEntry->getTime());
-
-					$sComment = (isset($aMessage['Comment'])
-							?   $aMessage['Comment']."\n"
-							:'<no comment>')
-						. "\n" . ' ---'
-						. "\n" . ' logged via ' . __CLASS__ ;
-
-					$iTime = $this->dateIntervalToSeconds($oDateInterval);
-					$sTime = $this->getTimeStringFromDateInterval($oDateInterval);
-					$sTicketId = $aMessage['Ticket'];
-				}#if
-			}#if
+//			$aEntries = $p_oTimeLog->getEntries();
+//
+//			//@TODO: The following code is copy/paste straight from the JiraConnector,
+//			//       Maybe there should be an utility method in Base that gives us this
+//			//       info?
+//			if(count($aEntries) > 1){
+//				/** @var $oLastEntry \DarkHelmet\Core\LogEntry */
+//				$oLastEntry   = array_pop($aEntries);
+//				/** @var $oTargetEntry \DarkHelmet\Core\LogEntry */
+//				$oTargetEntry = array_pop($aEntries);
+//
+//				$aMessage = $oTargetEntry->toArray($p_oContext->getTagPrefixes());
+//
+//				if(
+//					isset($aMessage['Meta']) && $aMessage['Meta'] === $this->getShortName()
+//					&& isset($aMessage['Ticket'])  // No number, no service
+//				) {
+//					$oDateInterval = $oTargetEntry->getTime()->diff($oLastEntry->getTime());
+//
+//					$sComment = (isset($aMessage['Comment'])
+//							?   $aMessage['Comment']."\n"
+//							:'<no comment>')
+//						. "\n" . ' ---'
+//						. "\n" . ' logged via ' . __CLASS__ ;
+//
+//					$iTime = $this->dateIntervalToSeconds($oDateInterval);
+//					$sTime = $this->getTimeStringFromDateInterval($oDateInterval);
+//					$sTicketId = $aMessage['Ticket'];
+//				}#if
+//			}#if
 		}
 
 		public function provideTags(Array $p_aTags, Context $p_oContext)
@@ -104,9 +115,8 @@ namespace DarkHelmet\Connectors\Github
 			$sUserName = $this->m_aConnector['GitUser'];
 			$sRepoName = $this->m_aConnector['GitRepo'];
 
-			$sUrl =
-				  'http://github.com/api/v2/json/issues/list/' . $sUserName
-				. '/' . $sRepoName . '/open'
+			$sUrl = 'https://api.github.com/repos/' . $sUserName .'/'
+					 .$sRepoName .'/issues'
 			;
 
 			//@TODO: Poll the server before trying to get content
@@ -117,7 +127,7 @@ namespace DarkHelmet\Connectors\Github
 			if(empty($oIssues)){
 				$aParsedTags[] = Tags::tagArray($p_oContext, '__ERROR__', 'Could not retrieve data from "' . $sUrl .'"', '');
 			}else{
-				$aIssues = $oIssues->issues;
+				$aIssues = $oIssues;
 
 				$aPrefixes = $p_oContext->getTagPrefixes();
 
@@ -125,9 +135,9 @@ namespace DarkHelmet\Connectors\Github
 					foreach($aIssues as $t_oIssue){
 						if($t_oIssue !== null){
 							$tag = $this->m_aConnector['Name'] . ' ' . $aPrefixes['Project'] . $sRepoName;
-							if(isset($t_oIssue->labels[0])){
-								foreach($t_oIssue->labels as $t_sLabel){
-									$tag .= ' ' . Tags::stripSpaces($aPrefixes['Group'] . $t_sLabel);
+							if(isset($t_oIssue->labels)){
+								foreach($t_oIssue->labels as $t_oLabel){
+									$tag .= ' ' . Tags::stripSpaces($aPrefixes['Group'] . $t_oLabel->name);// Also available in $t_oLabel : 'color' and 'url'
 								}
 							}#if
 							$tag .= ' ' . Tags::stripSpaces($aPrefixes['Task'] . $t_oIssue->title);
