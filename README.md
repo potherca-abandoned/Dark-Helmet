@@ -1,6 +1,6 @@
 # Once upon a time warp in deep space, the struggle between the nice & the rotten goes on...
 
-![Build Status][build_status]
+[![Build Status][build_status_img]][build_status]
 
 Or to be more precise, the struggle between Those Who Want To Get Things Done & Those Who Want To Know How Long It Took Them...
 
@@ -18,10 +18,10 @@ This tool is meant as a web-based interface to let you log your time with as lit
 For the sake of portability (i.e. switching tools), it doesn't allow you to add tasks/tickets the way you would with a todo-app or bug tracking system (you should just use a todo-app or bug tracking system for that). It will, however, allow you to connect it to other sources and take your tasks from there. It comes with connectors for JIRA and Github already on board. It can connect to any product or services that has a web API, all you need to do is write the code or ask me to write it for you ;-)
 
 ## About the name...
-![Dark Helmet][dark_helmet]
+![Dark Helmet][dark_helmet_img]
 
-[dark_helmet]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"
-[build_status]: http://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
-
+[dark_helmet_img]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"
+[build_status]: http://travis-ci.org/potherca/Dark-Helmet "Current Build Status"
+[build_status_img]: http://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
 
 
