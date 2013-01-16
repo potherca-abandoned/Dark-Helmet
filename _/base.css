@@ -195,3 +195,166 @@ body {
 	border-bottom: none;
 }
 /* EOF */
+
+
+.TimeLog .Job,
+ul.holder li.Job,
+.facebook-auto ul li.Job {
+    background-color: #80D386; /* green */
+}
+.facebook-auto ul li.Job.auto-focus {
+    background-color: #4E8051; /* green dark */
+}
+
+.TimeLog .Project,
+ul.holder li.Project,
+.facebook-auto ul li.Project {
+    background-color: #809DD3; /* blue */
+}
+.facebook-auto ul li.Project.auto-focus {
+    background-color: #4E5F80; /* blue dark */
+}
+
+
+.TimeLog .Task,
+ul.holder li.Task,
+.facebook-auto ul li.Task {
+    background-color: #D38080; /* red */
+}
+.facebook-auto ul li.Task.auto-focus {
+    background-color: #804E4E; /* red dark */
+}
+
+
+.TimeLog .User,
+ul.holder li.User,
+.facebook-auto ul li.User {
+    background-color: #F4F59C; /* yellow */
+}
+.facebook-auto ul li.User.auto-focus {
+    background-color: #97993D; /* yellow dark */
+}
+
+
+.TimeLog .Group,
+ul.holder li.Group,
+.facebook-auto ul li.Group {
+    background-color: #DFACFF; /* purple */
+}
+.facebook-auto ul li.Group.auto-focus {
+    background-color: #A9649D; /* purple dark */
+}
+
+.TimeLog .Time,
+ul.holder li.Time,
+.facebook-auto ul li.Time {
+    background-color: gray;
+}
+.facebook-auto ul li.Time.auto-focus {
+    background-color: darkgray;
+}
+
+.TimeLog .Ticket,
+ul.holder li.Ticket,
+.facebook-auto ul li.Ticket {
+    color: #FFF;
+    text-indent: 18px;
+    background:url("_/IconAppTypeJira.png") no-repeat #147;
+}
+.facebook-auto ul li.Ticket.auto-focus {
+    background-color: #035;
+}
+
+#test .facebook-auto ul li.auto-focus em {
+    background-color: gray;
+}
+.facebook-auto ul li.auto-focus:after {content:''}
+.facebook-auto ul li:after {
+    color:#EEE;
+    content: attr(class);
+    float:right;
+}
+.facebook-auto ul li.User:after {
+    color:#AAA;
+}
+
+.TimeLog .Meta,
+ul.holder li.Meta,
+.facebook-auto ul li.Meta {
+    display:none;
+}
+
+/*@TODO: The selector here is weird because of specifity needed. We should just add an ID to the body and use that for leverage...*/
+body .page form .Meta {
+    display:block;
+}
+
+form {
+    position: relative;
+}
+button {
+    float: left;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.TimeLog .time {
+    border: none;
+    color: #000;
+}
+
+.TimeLog li {
+    list-style: none;
+    clear: left;
+}
+
+.legend {
+    margin-bottom: 3em;
+}
+.TimeLog li span,
+.legend li {
+    margin: 0.1em;
+    padding: 0.1em 0.5em;
+    position: relative; float: left; border: 1px solid;
+    -moz-border-radius: 0.75em;
+    border-radius: 0.75em;
+    clear: none;
+    color: #666;
+}
+
+#tabs .TimeLog {
+    width: 100%;
+}
+
+.nav {
+    position: absolute;
+    top: 4em;
+    font-weight: bolder;
+    text-decoration: none;
+    border: 1px solid gray;
+    padding: 0;
+    margin: 0 -24em;
+    -moz-border-radius: 1em;
+    border-radius: 1em;
+    background-color: white;
+    color: black;
+    height: 1.25em;
+    width: 1.25em;
+    text-align: center;
+}
+.nav:hover {
+    color: white;
+    background-color: black;
+}
+.previous {left: 50%;}
+.next {right: 50%;}
+
+.no-form .next + .page {
+    margin-top: 5em;
+}
+
+.Ticket a {
+    color: white;
+    border: none;
+}
