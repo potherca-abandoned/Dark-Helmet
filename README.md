@@ -22,6 +22,6 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 
 [dark_helmet_img]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"
 [build_status]: http://travis-ci.org/potherca/Dark-Helmet "Current Build Status"
-[build_status_img]: http://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
+[build_status_img]: https://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
 
 
