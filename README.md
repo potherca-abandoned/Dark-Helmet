@@ -5,8 +5,9 @@
 Or to be more precise, the struggle between Those Who Want To Get Things Done & Those Who Want To Know How Long It Took Them...
 
 ## Premise
-When logging time spent on work, I have gotten used to logging what I intendtto do _up front_. That saves me all the hassle of having to try and remember once I am done doing something and helps me stay more focussed on the task at hand.
-I have often worked on different projects at the same time and they all tend to have their own place to log time. I wanted a tool that would allow me to track time spent through one web-interface and send it to various different sources. I couldn't really find any tool that did that so using my experience in solving time tracking problems for other companies I decided to write one myself.
+When logging time spent on work, I have gotten used to logging what I intend to do _up front_. That saves me all the hassle of having to try and remember once I am done doing something and helps me stay more focussed on the task at hand.
+I have often worked on different projects at the same time and they all tend to have their own place to log time. I wanted a tool that would allow me to track time spent through one web-interface and send it to various different sources. 
+I couldn't really find any tool that did that so using my experience in solving time tracking problems for other companies I decided to write one myself.
 This tool is set up in such a manner that it should be fairly straightforward to use and extend by writing connectors to your favourite ticket or tracking tools.
 
 Written with PHP, jQuery, HTML, CSS it tries to use existing project over creating it's own code for all but application-specific behaviour.
@@ -22,6 +23,6 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 
 [dark_helmet_img]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"
 [build_status]: http://travis-ci.org/potherca/Dark-Helmet "Current Build Status"
-[build_status_img]: http://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
+[build_status_img]: https://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
 
 
