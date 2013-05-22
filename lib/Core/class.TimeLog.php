@@ -38,10 +38,9 @@ namespace DarkHelmet\Core
 		    return $this->m_aEntries;
 	    }
 
-	    /**
-	     * @param string $name
-	     * @param string $value
-	     */
+		/**
+		 * @param \DarkHelmet\Core\LogEntry $p_oEntry
+		 */
 	    public function addEntry(LogEntry $p_oEntry)
 	    {
 		    $this->m_aEntries[] = $p_oEntry;
@@ -50,7 +49,8 @@ namespace DarkHelmet\Core
 
 	    /**
 	     * @param string $name
-	     */
+		 * @return null
+		 */
 	    public function getEntry($name)
 	    {
 		    $result = null;
@@ -59,11 +59,12 @@ namespace DarkHelmet\Core
 			    $result = $this->m_aEntries[$name];
 		    }
 		    return $result;
-	    }
+		}
 
-	    /**
-	     * @return void
-	     */
+		/**
+		 * @param array $p_aPrefixes
+		 * @return void
+		 */
 	    public function setTagPrefixes(Array $p_aPrefixes)
 	    {
 		    $this->m_aPrefixes = $p_aPrefixes;
@@ -102,11 +103,13 @@ namespace DarkHelmet\Core
 		{
 			return $this->m_bEntriesSorted;
 		}
-		
+
 		/**
 		 * Sets whether or not the array of entries is currently sorted
 		 *
-		 * @param boolean $p_bSorted 
+		 * @param boolean $p_bSorted
+		 *
+		 * @throws \InvalidArgumentException
 		 */
 		protected function setEntriesSorted($p_bSorted)
 		{
@@ -122,6 +125,7 @@ namespace DarkHelmet\Core
 		    $sThis = '';
 		    foreach($this->getEntries() as $t_iTime => $t_oEntry)
 		    {
+				/** @var $t_oEntry LogEntry */
 			    $sThis .= $t_oEntry->toString() ."\n";
 		    }#foreach
 		    return $sThis;
@@ -142,8 +146,10 @@ namespace DarkHelmet\Core
 		    $aEntries = $this->getEntries();
 		    foreach($aEntries as $t_iTime => $t_oEntry)
 		    {
+				/** @var $t_oEntry LogEntry */
 			    $aPrefixes = $this->getTagPrefixes();
-			    $sHtml .= '<li>'
+				/** @noinspection PhpUndefinedMethodInspection Method format() is defined in the returned DateTime object class. */
+				$sHtml .= '<li>'
 				    . '<span class="time">'
 				    . $t_oEntry->getTime()->format('H:i')
 				    . '</span>'
@@ -187,6 +193,7 @@ namespace DarkHelmet\Core
 		    $aTotals = $p_aTotals;
 
 		    foreach($this->getEntries() as $t_iIndex => $t_oEntry){
+				/** @var $t_oEntry LogEntry */
 
 			    $oNext = $this->getEntry($t_iIndex + 1);
 			    if($oNext !== null){
@@ -203,6 +210,7 @@ namespace DarkHelmet\Core
 					    asort($aEntryTags);
 					    $sUniqueTaskName = implode('|',array_values($aEntryTags)) . "\0" . implode('|', array_keys($aEntryTags));
 
+						/** @noinspection PhpUndefinedMethodInspection Method diff() is defined in the returned DateTime object class */
 					    $oDateInterval = $t_oEntry->getTime()->diff($oNext->getTime());
 
 					    // Tally Totals per Line
@@ -219,60 +227,77 @@ namespace DarkHelmet\Core
 
 	    public function outputTaskTotalTime()
 	    {
-		    $aTotals = array(
-			    'ALL' => array()
-		    );
-			
-			$oTimeZone = new \DateTimeZone(date_default_timezone_get());
-
-		    //$this->calculateTotals();
-		    foreach($this->getEntries() as $t_iIndex => $t_oEntry){
-				
-			    $oNext = $this->getEntry($t_iIndex + 1);
-			    if($oNext !== null){
-				    $taskname = $t_oEntry->getMessage();
-
-				    //@TODO: Add "ignore tags" attribute
-				    if(strpos($taskname, '%PAUSE') === false){
-					    $oDateInterval = $t_oEntry->getTime()->diff($oNext->getTime());
-
-					    // Tally Totals per Line
-					    if(!isset($aTotals['ALL'][$taskname])){
-						    $aTotals['ALL'][$taskname] = new DateTime('@0');
-							$aTotals['ALL'][$taskname]->setTimezone($oTimeZone);
-					    }#if
-					    $aTotals['ALL'][$taskname]->add($oDateInterval);
-
-					    if(!isset($aTotals['ALL']['__TOTAL__'])){
-						    $aTotals['ALL']['__TOTAL__'] = new DateTime('@0');
-							$aTotals['ALL']['__TOTAL__']->setTimezone($oTimeZone);
-					    }#if
-					    $aTotals['ALL']['__TOTAL__']->add($oDateInterval);
-
-					    // Tally Totals per Tag Type
-					    foreach($this->getTagsFromEntry($t_oEntry) as $t_sTagName => $t_sTagType){
-						    if(!isset($aTotals[$t_sTagType])){
-							    $aTotals[$t_sTagType] = array();
-							    $aTotals[$t_sTagType]['__TOTAL__'] = new DateTime('@0');
-								$aTotals[$t_sTagType]['__TOTAL__']->setTimezone($oTimeZone);
-						    }#if
-
-						    if(!isset($aTotals[$t_sTagType][$t_sTagName])){
-							    $aTotals[$t_sTagType][$t_sTagName] = new DateTime('@0');
-								$aTotals[$t_sTagType][$t_sTagName]->setTimezone($oTimeZone);
-						    }#if
-
-						    $aTotals[$t_sTagType][$t_sTagName]->add($oDateInterval);
-						    $aTotals[$t_sTagType]['__TOTAL__']->add($oDateInterval);
-					    }#foreach
-				    }#if
-			    }#if
-		    }#foreach
+			$aTotals = $this->calculateTotals();
 
 		    return $this->htmlTotals($aTotals);
 	    }
 
-	    public function htmlTotals(Array $p_aTotals)
+		public function calculateTotals()
+		{
+			$aTotals = array(
+				'ALL' => array()
+		   	);
+			$oTimeZone = new \DateTimeZone(date_default_timezone_get());
+
+			foreach ($this->getEntries() as $t_iIndex => $t_oEntry)
+			{
+				/** @var $t_oEntry LogEntry */
+				/** @var $oNext LogEntry */
+				$oNext = $this->getEntry($t_iIndex + 1);
+				if ($oNext !== null)
+				{
+					$taskname = $t_oEntry->getMessage();
+
+					//@TODO: Add "ignore tags" attribute
+					if (strpos($taskname, '%PAUSE') === false)
+					{
+						/** @noinspection PhpUndefinedMethodInspection Method diff() is defined in the returned DateTime object class */
+						$oDateInterval = $t_oEntry->getTime()->diff($oNext->getTime());
+
+						// Tally Totals per Line
+						if (!isset($aTotals['ALL'][$taskname]))
+						{
+							$aTotals['ALL'][$taskname] = new DateTime('@0');
+							$aTotals['ALL'][$taskname]->setTimezone($oTimeZone);
+						}#if
+						$aTotals['ALL'][$taskname]->add($oDateInterval);
+
+						if (!isset($aTotals['ALL']['__TOTAL__']))
+						{
+							$aTotals['ALL']['__TOTAL__'] = new DateTime('@0');
+							$aTotals['ALL']['__TOTAL__']->setTimezone($oTimeZone);
+						}#if
+						$aTotals['ALL']['__TOTAL__']->add($oDateInterval);
+
+						// Tally Totals per Tag Type
+						foreach ($this->getTagsFromEntry($t_oEntry) as $t_sTagName => $t_sTagType)
+						{
+							if (!isset($aTotals[$t_sTagType]))
+							{
+								$aTotals[$t_sTagType]              = array();
+								$aTotals[$t_sTagType]['__TOTAL__'] =
+									new DateTime('@0');
+								$aTotals[$t_sTagType]['__TOTAL__']->setTimezone($oTimeZone);
+							}#if
+
+							if (!isset($aTotals[$t_sTagType][$t_sTagName]))
+							{
+								$aTotals[$t_sTagType][$t_sTagName] =
+									new DateTime('@0');
+								$aTotals[$t_sTagType][$t_sTagName]->setTimezone($oTimeZone);
+							}#if
+
+							$aTotals[$t_sTagType][$t_sTagName]->add($oDateInterval);
+							$aTotals[$t_sTagType]['__TOTAL__']->add($oDateInterval);
+						}#foreach
+					}#if
+				}#if
+			}#foreach
+
+			return $aTotals;
+		}
+
+		public function htmlTotals(Array $p_aTotals)
 	    {
 		    $sContent = '';
 
@@ -285,6 +310,7 @@ namespace DarkHelmet\Core
 
 			    arsort($t_aTotals);
 			    foreach($t_aTotals as $t_sTask => $t_oTime){
+					/** @var $t_oTime DateTime */
 				    if($t_sTask === '__TOTAL__'){
 					    $oSectionTotal = $t_oTime;
 				    }else{
@@ -333,6 +359,7 @@ namespace DarkHelmet\Core
 		    $aContent = array();
 
 		    foreach($p_aTotals as $t_sTask => $t_oTime){
+				/** @var $t_oTime DateTime */
 			    $aDate = getdate($t_oTime->format('U'));
 			    $aContent[''
 				    .  ($aDate['hours'] - 1 < 10?'0':'') . ($aDate['hours'] - 1) . ':'
@@ -349,12 +376,12 @@ namespace DarkHelmet\Core
 			    $sContent  = '<ul class="TimeLog">';
 			    krsort($aContent);
 			    foreach($aContent as $sTime => $t_sTask){
-				    $t_sTask;
 
 				    $sContent .= '<li>'
 					    . '<span class="time">'
 					    . $sTime
-					    . '</span>';
+					    . '</span>'
+					;
 
 				    list($sTagTypes, $sTasks) = explode("\0", $t_sTask);
 

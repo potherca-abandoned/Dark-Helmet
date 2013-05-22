@@ -82,15 +82,16 @@ namespace DarkHelmet\Connectors\Local
 
             $p_oContext->set('keys', $aKeys);
 
-            $aParams = BaseController::getRequest()->getParamsFor($p_oContext->sBaseUrl);
+            /** @noinspection PhpUndefinedFieldInspection Field sBaseUrl is set in BaseController::getResponse() */
+			$aParams = BaseController::getRequest()->getParamsFor($p_oContext->sBaseUrl);
             if(isset($aParams[1])){
                 $sCurrent = $aParams[1];
 
                 if($p_oContext->get('sToday') !== $sCurrent){
-                    $oTimeLog = new TimeLog();
-                    $oTimeLog->setTagPrefixes($p_oContext->get('aPrefix'));
-                    $oTimeLog->setDate(new DateTime($sCurrent));
-                    $oTimeLog = $this->populateTimeLogFromFile($oTimeLog);
+
+					$sDateString = $sCurrent;
+
+					$oTimeLog = $this->createTimeLogFromDateString($sDateString, $p_oContext);
 
                     $p_oContext->set('oTimeLog', $oTimeLog);
                 }#if
@@ -99,9 +100,7 @@ namespace DarkHelmet\Connectors\Local
 
             $sCurrentKey = array_search($sCurrent, $aKeys);
 
-            //@TODO: Instead of setting the params here and having the buttons
-            //       in the main template we should use the UI API once it has
-            //       been implemented
+            //@TODO: Instead of setting the params here and having the buttons in the main template we should use the UI API once it has been implemented	BMP/2011/05/08
 
             if(isset($aKeys[$sCurrentKey+1])){
                 $p_oContext->set('previous', 'history/' . $aKeys[ $sCurrentKey===false?0:$sCurrentKey+1 ]);
@@ -114,6 +113,28 @@ namespace DarkHelmet\Connectors\Local
             return $p_oContext;
 		}
 
+		/**
+		 * @param $sDateString
+		 * @param \DarkHelmet\Core\Context $p_oContext
+		 *
+		 * @return \DarkHelmet\Core\TimeLog
+		 */
+		public function createTimeLogFromDateString($sDateString, Context $p_oContext)
+		{
+			$oDate    = new DateTime($sDateString);
+			return $this->createTimeLogFromDate($oDate, $p_oContext);
+		}
+
+		public function createTimeLogFromDate(DateTime $oDate, Context $p_oContext)
+		{
+			$oTimeLog = new TimeLog();
+			$oTimeLog->setTagPrefixes($p_oContext->get('aPrefix'));
+			$oTimeLog->setDate($oDate);
+			$oTimeLog = $this->populateTimeLogFromFile($oTimeLog);
+
+			return $oTimeLog;
+		}
+
 		public function provideTagsFromHistory(Array $p_aTags, Context $p_oContext)
 		{
 			$aParsedTags = $p_aTags;
@@ -123,7 +144,7 @@ namespace DarkHelmet\Connectors\Local
 			// The code below provides tags from the history and should be moved
 			// to a local-history-tag-provider-thingy.
 
-			// What we need to do here is simple get the date for which we need
+			// What we need to do here is simply get the date for which we need
 			// to show the history, validate a log file for it exists, read the
 			// file into a TimeLog and build content from that.
 			#==================================================================#
@@ -150,6 +171,7 @@ namespace DarkHelmet\Connectors\Local
 			$oPeriod = new \DatePeriod($oFirstDate, new \DateInterval('P1D'), $iGoBack);
 			$aLogs = array();
 			foreach($oPeriod as $t_oDate) {
+				/** @var $t_oDate DateTime */
 				$sLogFile = $this->m_sFilePrefix . $t_oDate->format('Ymd') . $this->m_sFileSuffix;
 				
 				if(is_readable($sLogsDir . $sLogFile)) {
@@ -175,7 +197,7 @@ namespace DarkHelmet\Connectors\Local
 			foreach($aLogs as $t_sLog) {
 				if($t_sLog !== '') {
 					$t_aTags = explode(" ", $t_sLog);
-					$t_sDate   = array_shift($t_aTags); // Remove the first element (the date) and store it in a variable.
+					array_shift($t_aTags); // Remove the first element (the date)
 
 					foreach($t_aTags as $t_sTag) {
 						if(!empty($t_sTag) && ($sCategory = array_search($t_sTag{0}, $p_oContext->get('aPrefix'))) !== false) {
@@ -263,8 +285,10 @@ namespace DarkHelmet\Connectors\Local
 			$oLogFile = new SplFileObject($sFilePath, 'w+');
 
 			foreach($p_oTimeLog->getEntries() as $t_oEntry){
+				/** @var $t_oEntry LogEntry */
+				/** @noinspection PhpUndefinedMethodInspection Method format() is defined in the returned DateTime object class */
 				$iWritten = $oLogFile->fwrite(
-					$t_oEntry->getTime()->format(DateTime::ATOM)
+					  $t_oEntry->getTime()->format(DateTime::ATOM)
 					. ' '
 					. $t_oEntry->getMessage()
 					. "\n"
@@ -277,7 +301,7 @@ namespace DarkHelmet\Connectors\Local
 
 		}
 
-		protected function populateTimeLogFromFile($p_oTimeLog)
+		protected function populateTimeLogFromFile(TimeLog $p_oTimeLog)
 		{
 			$sFilePath = $this->filePathForTimeLog($p_oTimeLog);
 
@@ -304,24 +328,32 @@ namespace DarkHelmet\Connectors\Local
 //////////////////////////////// Unused Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		/**
 		 * @param \SplFileInfo $p_oLogFile
+		 *
+		 * @throws \InvalidArgumentException
+		 * @return bool
 		 */
 		protected function validateFile(SplFileInfo $p_oLogFile)
 		{
+			/** @noinspection PhpUnusedLocalVariableInspection */
 			$bValid = false;
 
-			 try{
+			 try {
 				 $sFileType = $p_oLogFile->getType();
-			 }catch(\RuntimeException $e){
+			 }
+			 catch (\RuntimeException $e) {
 				throw new \InvalidArgumentException('Given Logfile "' . $p_oLogFile->getBasename() . '" does not exists.');
 			 }#catch
 
-			 if($sFileType !== 'file'){
-				throw new InvalidArgumentException('Given Logfile "' . $p_oLogFile->getBasename() . '" is not a file but a ' . $sFileType . '.');
-			 }elseif($p_oLogFile->isReadable() === false){
-				throw new InvalidArgumentException('Given Logfile "' . $p_oLogFile->getBasename() . '" is not readable.');
-			 }elseif($p_oLogFile->isWritable() === false){
-				throw new InvalidArgumentException('Given Logfile "' . $p_oLogFile->getBasename() . '" is not writeable.');
-			 }else{
+			 if ($sFileType !== 'file') {
+				throw new \InvalidArgumentException('Given Logfile "' . $p_oLogFile->getBasename() . '" is not a file but a ' . $sFileType . '.');
+			 }
+			 elseif ($p_oLogFile->isReadable() === false) {
+				throw new \InvalidArgumentException('Given Logfile "' . $p_oLogFile->getBasename() . '" is not readable.');
+			 }
+			 elseif ($p_oLogFile->isWritable() === false) {
+				throw new \InvalidArgumentException('Given Logfile "' . $p_oLogFile->getBasename() . '" is not writeable.');
+			 }
+			 else {
 				$bValid = true;
 			 }#if
 
