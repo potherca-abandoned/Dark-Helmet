@@ -49,6 +49,7 @@
 
     <Connectors multiple-values="true">
 
+        <!-- Predefined Connector -->
         <Connector>
             <Name>Predefined</Name>
             <Class>DarkHelmet\Connectors\Predefined\PredefinedConnector</Class>
@@ -57,6 +58,7 @@
             </Params>
         </Connector>
 
+        <!-- Local Connector  -->
         <Connector>
             <Name>Local</Name>
             <Class>DarkHelmet\Connectors\Local\LocalConnector</Class>
@@ -66,6 +68,7 @@
             </Params>
         </Connector>
 
+        <!-- Github Connector -->
         <Connector>
             <Name>Github</Name>
             <Class>DarkHelmet\Connectors\Github\GithubConnector</Class>
@@ -75,6 +78,7 @@
             </Params>
         </Connector>
 
+        <!-- Jira Connector -->
         <Connector>
             <Name>Jira</Name>
             <Class>DarkHelmet\Connectors\Jira\JiraConnector</Class>
@@ -87,6 +91,39 @@
                     https://example.com/jira/rpc/soap/jirasoapservice-v2?wsdl
                 </Wsdl>
                 <FilterID>10031</FilterID>
+            </Params>
+        </Connector>
+
+        <!-- Redmine Connector -->
+        <Connector>
+            <Name>Redmine</Name>
+            <Class>DarkHelmet\Connectors\Redmine\RedmineConnector</Class>
+            <Params>
+                <Credentials source="Credentials">
+                    <User>2</User>
+                    <Password>2</Password>
+                </Credentials>
+                <Url>
+                    http://redmine.example.com/
+                </Url>
+                <!--
+                    By creating a query in Redmine for tickets assigned to the
+                    current user we can simply use a query-id to get the list
+                    of tickets we need.
+                -->
+                <!-- Assigned to Current User -->
+                <FilterQuery>query_id=123</FilterQuery>
+                <!--
+                    Alternatively we could retrieve the ID
+                    of the current user by taking note of the ID at the
+                    following URL:
+                        http://redmine.example.com/users/current.json
+
+                    We can then retrieve the list of tickets assigned to Current
+                    User using the users ID:
+
+                        <FilterQuery>assigned_to_id=123</FilterQuery>
+                -->
             </Params>
         </Connector>
 
