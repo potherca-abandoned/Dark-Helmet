@@ -489,8 +489,8 @@ namespace DarkHelmet\Core\Controllers
 
 			if($oTimeLog === null){
 				$oTimeLog = $this->getTimeLog();
-
 				$aPostFields = $this->getRequest()->getPostFields();
+
 				if(!empty($aPostFields)){
 					$oLogEntry = new LogEntry();
 
@@ -498,16 +498,23 @@ namespace DarkHelmet\Core\Controllers
 					if(count($aPostFields) === 1 && strpos($aPostFields[0]{0}, $this->getContext()->getTagPrefix('Ticket')) !== false){
 							// Only A ticket ID
 							// @TODO: replace post fields with full tag set for ticket
-					}else if(strpos($aPostFields[0], $this->getContext()->getTagPrefix('Meta')) !== false){
-						// Special Meta Tag
-						$sMeta = array_shift($aPostFields);
+					}else {
+						foreach($aPostFields as $t_iIndex => $t_sField){
+							if(strpos($t_sField, $this->getContext()->getTagPrefix('Meta')) !== false){
+								// Special Meta Tag
+								$sMeta = $t_sField;
 
-						if($sMeta{0} === $this->getContext()->getTagPrefix('Meta')
-							&& array_search($sMeta{1}, $this->getContext()->getTagPrefixes()) !== false
-						){
-							$sMeta = substr($sMeta, 1);
-						}
-						$aPostFields = array_merge(explode(' ', $sMeta), $aPostFields);
+								if($sMeta{0} === $this->getContext()->getTagPrefix('Meta')
+									&& array_search($sMeta{1}, $this->getContext()->getTagPrefixes()) !== false
+								){
+									$sMeta = substr($sMeta, 1);
+								}
+
+								unset($aPostFields[$t_iIndex]);
+
+								$aPostFields = array_merge($aPostFields, explode(' ', $sMeta));
+							}#if
+						}#foreach
 					}#if
 
 					$oLogEntry->setMessageFromArray($aPostFields, $oTimeLog->getTagPrefixes());
