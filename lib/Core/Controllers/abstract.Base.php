@@ -100,7 +100,7 @@ namespace DarkHelmet\Core\Controllers
 		}
 
 		/**
-		 * @param DarkHelmet\Core\Request $p_oRequest
+		 * @param \DarkHelmet\Core\Request $p_oRequest
 		 */
 		static public function setRequest(Request $p_oRequest)
 		{
@@ -115,7 +115,7 @@ namespace DarkHelmet\Core\Controllers
 			return self::$m_oRequest;
 		}
 		/**
-		 * @param DarkHelmet\Core\Settings $p_oSettings
+		 * @param \DarkHelmet\Core\Settings $p_oSettings
 		 * @return \DarkHelmet\Core\Settings The previous Settings.
 		 */
 		public function setSettings(Settings $p_oSettings)
@@ -224,15 +224,7 @@ namespace DarkHelmet\Core\Controllers
 			else {
 				return $sOutput;
 			}#if
-
 		}
-		
-		/**
-		 * Returns the text (html) that is to be sent to the browser
-		 * 
-		 * @return string
-		 */
-		abstract public function buildOutput();
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		protected function invokeHookFor(\ReflectionMethod $t_oMethodReflector){
@@ -301,6 +293,7 @@ namespace DarkHelmet\Core\Controllers
 							, array(Tags::tagArray($oContext, '__ERROR__', $t_oConnector->getShortName().' '.$oException->getMessage(), ''))
 						);
 					}
+					//@FIXME: the setTags() method is only available in an extending class!
 					$this->setTags($aTags);
 				}
 //				else
@@ -420,6 +413,7 @@ namespace DarkHelmet\Core\Controllers
 
 		public function buildTags()
 		{
+			//@FIXME: the m_aTags property is only available in an extending class!
 			$aTags = $this->array_unique_multi($this->m_aTags);
 
 			if ($this->getContext()->offsetExists('sMessage')) {
