@@ -2,6 +2,7 @@
 
 namespace DarkHelmet\Core\Controllers
 {
+	use DarkHelmet\Connectors\Local\LocalConnector;
 	use \DateTime;
 
 	use DarkHelmet\Core\Hooks\History as HistoryHook;
@@ -28,39 +29,31 @@ namespace DarkHelmet\Core\Controllers
 		{
 			// As everything is already set up here, all we need to do is pass
 			// everything to the template and let that do the work for us.
-            $oContext = $this->getContext();
+			$oContext = $this->getContext();
 
-            $oContext
+			$oDate = new DateTime($this->m_sDate);
+			$oContext
 				->setTemplate('main.html')
 				->set('bShowForm', false)
 				->set('sDate', $this->m_sDate)
-				->set('oDate', new DateTime($this->m_sDate))
-//			$oContext	->set('sMessage', 'History Listing has not been implemented yet.')
+				->set('oDate', $oDate)
 			;
 
-//			return $this->buildTemplateOutputFromContext($this->getContext());
-////////////////////////////////////////////////////////////////////////////////
-            //@TODO: Show the History Listing
-            /*
-                To properly implement this we need to add another required
-                method to the historyConnector interface that requires triggered
-                HistoryProviders to provide a list we can then turn into:
-
-                    <li><a href="history/$tag"></a></li>
-            */
-            $aHistory = array();
+			$aHistory = array();
 
 			if(empty($this->m_sDate)){
-                $oContext->set('bShowForm', false);
+				$oContext->set('bShowForm', false);
+				$oContext->setTemplate('history.html');
 
 				$aDayTotals = array();
-				$aWeekTotals = array();
+				$aWeekEntries = array();
 
-                $iCurrentWeek = 0;
-                $iWeekTally = 0;
 				foreach($this->getSettings()->getConnectors() as $t_oConnector){
-					if($t_oConnector instanceof \DarkHelmet\Connectors\Local\LocalConnector){
-						/** @var $t_oConnector \DarkHelmet\Connectors\Local\LocalConnector */
+
+					$iCurrentWeek = 0;
+					$iWeekTally = 0;
+
+					if($t_oConnector instanceof LocalConnector){
 						$aHistoryList = $t_oConnector->getHistoryList();
 						$aKeys = array_keys($aHistoryList);
 						$oContext->set('keys', $aKeys);
@@ -84,41 +77,37 @@ namespace DarkHelmet\Core\Controllers
 						krsort($aDayTotals); // Newest first
 						foreach($aDayTotals as $t_sDay => $t_sDayTotalSeconds)
 						{
-                            $sTimestamp = strtotime($t_sDay);
-                            echo sprintf(
-                                '<li>
-                                    <a href="history/%1$s"> %2$s </a>
-                                    <span class="day-total">%3$s</span>
-                                </li>'
-                                , $t_sDay
-                                , date('D j F Y', $sTimestamp)
-                                , gmdate("H:i:s", $t_sDayTotalSeconds)
-                            );
+							$sTimestamp = strtotime($t_sDay);
+							$iWeek = date('W', $sTimestamp);
+							$sWeekKey = $iWeek . '/' . date('Y', $sTimestamp);
 
-                            $iWeek = date('W', $sTimestamp);
-                            if($iWeek !== $iCurrentWeek) {
-                                $iWeekTally += $t_sDayTotalSeconds;
-                                echo sprintf(
-                                      '</ul><p class="week-total">Week Total: <span>%2$s</span></p><hr/>
-                                       <p class="week">Week %1$s/%3$s: <span>%2$s</span></span></p><ul>
-                                      '
-                                    , $iWeek
-                                    , sprintf("%02d:%02d:%02d", floor($iWeekTally/3600), ($iWeekTally/60)%60, $iWeekTally%60)
-                                    , date('Y', $sTimestamp)
+							if(isset($aWeekEntries[$sWeekKey]) === false){
+								$aWeekEntries[$sWeekKey] = array('aDayEntries'=>array());
+							}#if
 
-                                );
-                                $iCurrentWeek = $iWeek;
-                                $iWeekTally = 0;
-                            } else {
-                                $iWeekTally += $t_sDayTotalSeconds;
-                            }
-						}
+							$aWeekEntries[$sWeekKey]['aDayEntries'][$t_sDay] = array(
+								  'sDate' => date('D j F Y', $sTimestamp)
+								, 'sTime' => gmdate("H:i:s", $t_sDayTotalSeconds)
+							);
+
+							if($iWeek !== $iCurrentWeek) {
+								// Reset for a new week
+								$iCurrentWeek = $iWeek;
+								$iWeekTally = 0;
+							}#if
+
+							$iWeekTally += $t_sDayTotalSeconds;
+							$aWeekEntries[$sWeekKey]['sTotal'] = $this->weekTallyToString($iWeekTally);
+						}#foreach
+
+						$oContext->set('aWeekEntries', $aWeekEntries);
 					}#if
 				}#foreach
 			}
 			else if($this->m_sDate !== $oContext->get('sToday')){
 				foreach($this->getSettings()->getConnectors() as $t_oConnector){
 					if($t_oConnector instanceof History){
+						/** @var \DarkHelmet\Connectors\Hooks\History $t_oConnector  */
 						$aHistory = array_merge(
 							  $aHistory
 							, $t_oConnector->provideHistory($oContext)
@@ -141,6 +130,23 @@ namespace DarkHelmet\Core\Controllers
 			//       So we need both a HistoryList as a single History object?
 			return $this->buildTemplateOutputFromContext($oContext);
 		}
+
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		/**
+		 * @param $iWeekTally
+		 *
+		 * @return string
+		 */
+		protected function weekTallyToString($iWeekTally)
+		{
+			$sWeekTally = sprintf(
+				"%02d:%02d:%02d",
+				floor($iWeekTally / 3600),
+				($iWeekTally / 60) % 60,
+				$iWeekTally % 60
+			);
+
+			return $sWeekTally;
+		}
 	}
 }
