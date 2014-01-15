@@ -26,3 +26,7 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 [build_status_img]: https://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
 
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/potherca/dark-helmet/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
