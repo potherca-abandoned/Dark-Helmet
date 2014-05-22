@@ -1,26 +1,18 @@
 @CHARSET "UTF-8";
-/*-----------------------------------------------------------*\
- *                           INDEX                           *
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
- *      1. TAG STYLES
- *      2. GENERAL STYLES
- *      3. CLASSES
- *      4. HELPER CLASSES
- * 		5. JAVASCRIPT ENHANCED ELEMENTS
- *-----------------------------------------------------------*
- *      BLUE        #0558A8
- *      LIGHT BLUE  #CCCCFF
- *      GREEN       #94AB2F
- *
- *      WHITE       #FFFFFF
- *      LIGHT GREY  #999999
- *      GREY        #666666
- *      BLACK       #000000
-\*-----------------------------------------------------------*/
+/*=============================================================================*
+ *                           INDEX                                             *
+ * ----------------------------------------------------------------------------
+ *      1. Base Tags
+ *      2. General Styles
+ *      3. Modules
+ *          3.1. History Overview Styling
+ *      4. Helper Classes
+ *      5. Javascript Enhanced Elements
+ =============================================================================*/
 
 
-/*         TAG STYLES
-**************************************************************/
+/*  Base Tags
+ =============================================================================*/
 body {
     background-color: #F7F7F7;
     color: #333333;
@@ -30,15 +22,15 @@ body {
     width: 40em;
 }
 
-	a {
-	    color: #94AB2F;
-	    border-bottom: 1px solid #94AB2F;
-	    text-decoration: none;
-	}
+    a {
+        color: #94AB2F;
+        border-bottom: 1px solid #94AB2F;
+        text-decoration: none;
+    }
 
-	a:hover {
-	    border-bottom-color: #0558A8;
-	}
+    a:hover {
+        border-bottom-color: #0558A8;
+    }
 
     code {
         white-space: pre; /* nowrap? */
@@ -51,52 +43,52 @@ body {
         border: 1px solid #EEE;
     }
 
-	dd {}
-	dl {}
-	dt {
-	    font-weight:bold;
-	    margin-top:1em;
-	}
+    dd {}
+    dl {}
+    dt {
+        font-weight:bold;
+        margin-top:1em;
+    }
 
 
     h1 {
-	    color: #999;
-	    font-size: 20pt;
-	    position: fixed;
-	    right: 10pt;
-	    text-align: right;
-	    top: 10pt;
-	}
+        color: #999;
+        font-size: 20pt;
+        position: fixed;
+        right: 10pt;
+        text-align: right;
+        top: 10pt;
+    }
 
 
-	h2,h3,h4,h5,h6 {
-		background-color:#FFFFFF;
-		border-bottom:1px solid;
-		border-left:1px dotted;
-		border-top:1px solid;
-		color:#0558A8;
-		margin-right: 15em;
-		padding:0 0.5em;
-		width:auto;
-	}
+    h2,h3,h4,h5,h6 {
+        background-color:#FFFFFF;
+        border-bottom:1px solid;
+        border-left:1px dotted;
+        border-top:1px solid;
+        color:#0558A8;
+        margin-right: 15em;
+        padding:0 0.5em;
+        width:auto;
+    }
     h2 {font-size: 20pt; margin-left: -6em;}
     h3 {font-size: 14pt; margin-left: -4em;}
     h4 {font-size: 12pt; margin-left: -2em;}
     h5 {font-size: 12pt; margin-left: -1em;}
 
-	li {
-	    font-size: 10pt;
-	}
+    li {
+        font-size: 10pt;
+    }
 
 
-	p {
-	    text-align: justify;
-	}
+    p {
+        text-align: justify;
+    }
 
-	ol {list-style-type: upper-roman; }
+    ol {list-style-type: upper-roman; }
 
-/*         GENERAL STYLES
-**************************************************************/
+/*  General Styles
+ =============================================================================*/
     h1 a {
         color: #999;
     }
@@ -113,8 +105,8 @@ body {
     ol ol ol ol {list-style-type: decimal; }
 
 
-/*         CLASSES
-**************************************************************/
+/*  Modules
+ =============================================================================*/
     .company {
         font-family:"Trebuchet MS","Verdana",sans-serif;
         margin-bottom:1em;
@@ -122,8 +114,26 @@ body {
     }
 
 
-/*         HELPER CLASSES
-**************************************************************/
+    /*  History Overview Styling
+    --------------------------------------------------------------------------*/
+    .week-entry ul {
+        overflow: hidden;
+    }
+    .week-entry ul {
+        height: 0;
+        transition: 0.5s 0.5s all ease;
+    }
+
+    .week-entry:hover ul {
+        height: 5em;
+    }
+
+    .week-entry:hover h3 {
+        border-color: blue;
+    }
+
+/*  Helper Classes
+ =============================================================================*/
     pre code,
     .block {
         display: block;
@@ -137,10 +147,10 @@ body {
         text-align: right;
     }
 
-	.main,
-	.important {
-	    font-weight: bold;
-	}
+    .main,
+    .important {
+        font-weight: bold;
+    }
 
     .small {
         font-size: 8pt;
@@ -163,7 +173,7 @@ body {
     white-space: normal;
 }
 
-.warn {
+.Error, .warn {
     background: #FFBFBF url(exclamation.gif) center no-repeat;
     background-position: 15px 50%; /* x-pos y-pos */
     border-top: 2px solid #FF2424;
@@ -172,27 +182,40 @@ body {
     padding: 5px 20px 5px 45px;
     text-align: left;
     white-space: normal;
-	margin-bottom: 2px;
+    margin-bottom: 2px;
+}
+body {
+    counter-reset: stack-counter;
+}
+
+.Stack {
+    counter-increment: stack-counter;
+    background-color: rgb(255,255,0);
+    border: 1px solid orange;
+}
+
+.Stack:before {
+    content: counter(stack-counter, decimal-leading-zero) ". ";
 }
 
 .no-bullets {
-	list-style: none;
-	margin-left: 0;
-	padding-left: 0;
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .messages li {
-	font-size: 1em;
+    font-size: 1em;
 }
 
-/*         JAVASCRIPT ENHANCED ELEMENTS
-**************************************************************/
+/*  Javascript Enhanced Elements
+ =============================================================================*/
 
 .ui-tabs .ui-tabs-nav li a {
-	float: left;
-	text-decoration: none;
-	padding: .5em 1em;
-	border-bottom: none;
+    float: left;
+    text-decoration: none;
+    padding: .5em 1em;
+    border-bottom: none;
 }
 /* EOF */
 
@@ -259,7 +282,7 @@ ul.holder li.Ticket,
 .facebook-auto ul li.Ticket {
     color: #FFF;
     text-indent: 18px;
-    background:url("_/IconAppTypeJira.png") no-repeat #147;
+    background:url("IconAppTypeJira.png") no-repeat #147;
 }
 .facebook-auto ul li.Ticket.auto-focus {
     background-color: #035;
@@ -284,7 +307,7 @@ ul.holder li.Meta,
     display:none;
 }
 
-/*@TODO: The selector here is weird because of specifity needed. We should just add an ID to the body and use that for leverage...*/
+/*@TODO: The selector here is weird because of specificity needed. We should just add an ID to the body and use that for leverage...*/
 body .page form .Meta {
     display:block;
 }
@@ -358,3 +381,5 @@ button {
     color: white;
     border: none;
 }
+
+/*EOF*/
