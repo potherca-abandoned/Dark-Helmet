@@ -120,12 +120,21 @@ namespace DarkHelmet\Connectors\Github
 			;
 
 			//@TODO: Poll the server before trying to get content
-			$oIssues = \json_decode(
-				@\file_get_contents($sUrl)
-			);
+            $oIssues = null;
+			try {
+				$oIssues = \json_decode(
+					@\file_get_contents($sUrl)
+				);
+			} catch(\ErrorException $eError){
+                $aParsedTags[] = Tags::tagArray($p_oContext
+                    , '__ERROR__', 'Could not retrieve data from "' . $sUrl .'"'
+                        . $eError->getMessage()
+                    , ''
+                );
+			}
 
 			if(empty($oIssues)){
-				$aParsedTags[] = Tags::tagArray($p_oContext, '__ERROR__', 'Could not retrieve data from "' . $sUrl .'"', '');
+				$aParsedTags[] = Tags::tagArray($p_oContext, '__ERROR__', 'Did not receive any data from "' . $sUrl .'"', '');
 			}else{
 				$aIssues = $oIssues;
 

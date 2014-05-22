@@ -1,0 +1,29 @@
+<html
+    tal:omit-tag="true"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+>
+
+<tal:block metal:use-macro="index.html/main">
+    <tal:block metal:fill-slot="content">
+
+        <h2>History</h2>
+        <div class="page">
+            <div tal:repeat="t_aWeekEntry aWeekEntries" class="week-entry">
+                <h3 class="week">
+                    Week ${repeat/t_aWeekEntry/key}
+                    <span style="float: right;" tal:condition="exists: t_aWeekEntry/sTotal">
+                        ${t_aWeekEntry/sTotal}
+                    </span>
+                </h3>
+                <ul>
+                    <li tal:repeat="t_aDayEntry t_aWeekEntry/aDayEntries">
+                        <a href="${repeat/t_aDayEntry/key}"> ${t_aDayEntry/sDate}</a>
+                        <span class="day-total">${t_aDayEntry/sTime}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </tal:block>
+</tal:block>
+</html>

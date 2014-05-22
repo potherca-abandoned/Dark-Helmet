@@ -107,14 +107,29 @@
 		var $tags = $("#tags");
 		$.getJSON("${sBaseUrl}tags/", null, function(data){
 
-			$.each(data, function(){
-				var tContent = $('<option></option>');
+			$.each(data, function(p_iIndex, p_uValue){
+			    if(this.value === '__ERROR__: '){
+			        var $MessageList = $('.messages');
+                    if($MessageList.length === 0){
+                        $MessageList = $('<ul class="no-bullets messages"></ul>');
+                        $MessageList.insertAfter($('h1'));
+                    }
 
-				tContent.addClass(this.addClass);
-				tContent.val(this.value);
-				tContent.text(this.caption);
+                    $MessageList.append(
+                          '<li class="Error">'
+			            + this.caption
+			            + '</li>'
+		            );
+			    } else {
+				    var tContent = $('<option></option>');
 
-				$tags.append(tContent);
+
+				    tContent.addClass(this.addClass);
+				    tContent.val(this.value);
+				    tContent.text(this.caption);
+
+				    $tags.append(tContent);
+			    }
 			});
 
 			if($tags.length > 0){
@@ -139,7 +154,7 @@
 <body tal:attributes="class php: bShowForm ?'form':'no-form'">
     <h1><a href="../../" tal:attributes="href string:${sBaseUrl}">Hour logging</a></h1>
 	<ul tal:condition="aMessages" class="no-bullets messages">
-		<li tal:repeat="t_oMessage aMessages" class="warn">
+		<li tal:repeat="t_oMessage aMessages" class="${t_oMessage/getSeverityText}">
 			${t_oMessage/getSeverityText}: ${t_oMessage/getText}
 		</li>
 	</ul>

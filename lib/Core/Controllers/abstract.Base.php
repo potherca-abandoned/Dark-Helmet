@@ -1,7 +1,8 @@
 <?php
 namespace DarkHelmet\Core\Controllers
 {
-	use \DateTime;
+    use DarkHelmet\Core\Message;
+    use \DateTime;
 
 	use DarkHelmet\Core\Context;
 	use DarkHelmet\Core\Exception;
@@ -100,7 +101,7 @@ namespace DarkHelmet\Core\Controllers
 		}
 
 		/**
-		 * @param DarkHelmet\Core\Request $p_oRequest
+		 * @param \DarkHelmet\Core\Request $p_oRequest
 		 */
 		static public function setRequest(Request $p_oRequest)
 		{
@@ -115,7 +116,7 @@ namespace DarkHelmet\Core\Controllers
 			return self::$m_oRequest;
 		}
 		/**
-		 * @param DarkHelmet\Core\Settings $p_oSettings
+		 * @param \DarkHelmet\Core\Settings $p_oSettings
 		 * @return \DarkHelmet\Core\Settings The previous Settings.
 		 */
 		public function setSettings(Settings $p_oSettings)
@@ -190,8 +191,8 @@ namespace DarkHelmet\Core\Controllers
 
 			// Setup the current Context
 			//@TODO: Move this to protected function setupContext(){}
-			$oContext = $oInstance->getContext()
-					->set('sBaseUrl', $sUrl)
+            $oContext = $oInstance->getContext();
+            $oContext->set('sBaseUrl', $sUrl)
 					->set('sToday', $sToday)
 					->set('bShowForm', true)
 					->set('oTimeLog', $oTimeLog)//@CHECKME: Not all Controllers need $oTimeLog... shouldn't this be set elsewhere?
@@ -211,7 +212,12 @@ namespace DarkHelmet\Core\Controllers
 				$oInstance->m_sRedirectUrl = null;
 
 				//Set error to be displayed
-				$oInstance->getContext()->addMessage(new \DarkHelmet\Core\Message($oException->getMessage()));
+				$oContext->addMessage(new \DarkHelmet\Core\Message($oException->getMessage()));
+                foreach($oException->getTrace() as $t_aTrace){
+                    $oContext->addMessage(
+                        new \DarkHelmet\Core\Message(print_r($t_aTrace,true), Message::SEVERITY_STACK)
+                    );
+                }
 			}#try
 			
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!
@@ -224,15 +230,7 @@ namespace DarkHelmet\Core\Controllers
 			else {
 				return $sOutput;
 			}#if
-
 		}
-		
-		/**
-		 * Returns the text (html) that is to be sent to the browser
-		 * 
-		 * @return string
-		 */
-		abstract public function buildOutput();
 
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		protected function invokeHookFor(\ReflectionMethod $t_oMethodReflector){
@@ -301,6 +299,7 @@ namespace DarkHelmet\Core\Controllers
 							, array(Tags::tagArray($oContext, '__ERROR__', $t_oConnector->getShortName().' '.$oException->getMessage(), ''))
 						);
 					}
+					//@FIXME: the setTags() method is only available in an extending class!
 					$this->setTags($aTags);
 				}
 //				else
@@ -420,6 +419,7 @@ namespace DarkHelmet\Core\Controllers
 
 		public function buildTags()
 		{
+			//@FIXME: the m_aTags property is only available in an extending class!
 			$aTags = $this->array_unique_multi($this->m_aTags);
 
 			if ($this->getContext()->offsetExists('sMessage')) {
@@ -489,8 +489,8 @@ namespace DarkHelmet\Core\Controllers
 
 			if($oTimeLog === null){
 				$oTimeLog = $this->getTimeLog();
-
 				$aPostFields = $this->getRequest()->getPostFields();
+
 				if(!empty($aPostFields)){
 					$oLogEntry = new LogEntry();
 
@@ -498,16 +498,23 @@ namespace DarkHelmet\Core\Controllers
 					if(count($aPostFields) === 1 && strpos($aPostFields[0]{0}, $this->getContext()->getTagPrefix('Ticket')) !== false){
 							// Only A ticket ID
 							// @TODO: replace post fields with full tag set for ticket
-					}else if(strpos($aPostFields[0], $this->getContext()->getTagPrefix('Meta')) !== false){
-						// Special Meta Tag
-						$sMeta = array_shift($aPostFields);
+					}else {
+						foreach($aPostFields as $t_iIndex => $t_sField){
+							if(strpos($t_sField, $this->getContext()->getTagPrefix('Meta')) !== false){
+								// Special Meta Tag
+								$sMeta = $t_sField;
 
-						if($sMeta{0} === $this->getContext()->getTagPrefix('Meta')
-							&& array_search($sMeta{1}, $this->getContext()->getTagPrefixes()) !== false
-						){
-							$sMeta = substr($sMeta, 1);
-						}
-						$aPostFields = array_merge(explode(' ', $sMeta), $aPostFields);
+								if($sMeta{0} === $this->getContext()->getTagPrefix('Meta')
+									&& array_search($sMeta{1}, $this->getContext()->getTagPrefixes()) !== false
+								){
+									$sMeta = substr($sMeta, 1);
+								}
+
+								unset($aPostFields[$t_iIndex]);
+
+								$aPostFields = array_merge($aPostFields, explode(' ', $sMeta));
+							}#if
+						}#foreach
 					}#if
 
 					$oLogEntry->setMessageFromArray($aPostFields, $oTimeLog->getTagPrefixes());

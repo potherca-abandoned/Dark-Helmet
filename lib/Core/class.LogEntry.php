@@ -62,8 +62,9 @@ namespace DarkHelmet\Core
 		// </editor-fold>
 		// <editor-fold defaultstate="collapsed" desc="Property DateTime Time">
 		private $time;
+
 		/**
-		 * @return DateTime
+		 * @return \DateTime
 		 */
 		public function getTime()
 		{
