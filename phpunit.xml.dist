@@ -10,13 +10,11 @@
 		convertWarningsToExceptions="true"
 		forceCoversAnnotation="false"
 		mapTestClassNameToCoveredClassName="true"
-		printerClass="PHPUnit_TextUI_ResultPrinter"
 		processIsolation="false"
 		stopOnError="false"
 		stopOnFailure="false"
 		stopOnIncomplete="false"
 		stopOnSkipped="false"
-		testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
 		strict="true"
 		verbose="true"
 >
@@ -25,7 +23,7 @@
 			<directory suffix=".php">./tests/Dark-Helmet</directory>
 		</testsuite>
 	</testsuites>
-	
+
 	<logging>
 		<log type="coverage-html" target="./test-report"  title="DarkHelmet"
 		     charset="UTF8" yui="true" highlight="true" showUncoveredFiles="true"
