@@ -1,7 +1,8 @@
 <?php
 namespace DarkHelmet\Core\Controllers
 {
-	use \DateTime;
+    use DarkHelmet\Core\Message;
+    use \DateTime;
 
 	use DarkHelmet\Core\Context;
 	use DarkHelmet\Core\Exception;
@@ -190,8 +191,8 @@ namespace DarkHelmet\Core\Controllers
 
 			// Setup the current Context
 			//@TODO: Move this to protected function setupContext(){}
-			$oContext = $oInstance->getContext()
-					->set('sBaseUrl', $sUrl)
+            $oContext = $oInstance->getContext();
+            $oContext->set('sBaseUrl', $sUrl)
 					->set('sToday', $sToday)
 					->set('bShowForm', true)
 					->set('oTimeLog', $oTimeLog)//@CHECKME: Not all Controllers need $oTimeLog... shouldn't this be set elsewhere?
@@ -211,7 +212,12 @@ namespace DarkHelmet\Core\Controllers
 				$oInstance->m_sRedirectUrl = null;
 
 				//Set error to be displayed
-				$oInstance->getContext()->addMessage(new \DarkHelmet\Core\Message($oException->getMessage()));
+				$oContext->addMessage(new \DarkHelmet\Core\Message($oException->getMessage()));
+                foreach($oException->getTrace() as $t_aTrace){
+                    $oContext->addMessage(
+                        new \DarkHelmet\Core\Message(print_r($t_aTrace,true), Message::SEVERITY_STACK)
+                    );
+                }
 			}#try
 			
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!

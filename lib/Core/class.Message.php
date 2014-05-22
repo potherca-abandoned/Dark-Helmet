@@ -5,6 +5,7 @@ namespace DarkHelmet\Core
 	class Message {
 		
 		const SEVERITY_NOTICE = 1;
+		const SEVERITY_STACK = 1;
 		const SEVERITY_WARNING = 2;
 		const SEVERITY_ERROR = 3;
 		
@@ -60,6 +61,9 @@ namespace DarkHelmet\Core
 		public function getSeverityText() {
 			$result = '';
 			switch($this->getSeverity()) {
+				case self::SEVERITY_STACK:
+					$result = 'Stack';
+					break;
 				case self::SEVERITY_NOTICE:
 					$result = 'Notice';
 					break;
