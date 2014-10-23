@@ -2,6 +2,7 @@
 
 [![Build Status][build_status_img]][build_status]
 [![Project Stage Badge: Development]][Project Stage Page]
+[![Scrutinizer Badge]][Code Quality Page]
 [![Codacy Badge]][Codacy Page]
 [![License Badge]][GPL3+]
 
@@ -35,7 +36,9 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 [Releases Page]: /releases/
 [Codacy Page]: https://www.codacy.com/public/potherca/Dark-Helmet.git
 [GPL3+]: LICENSE
+[Code Quality Page]: https://scrutinizer-ci.com/g/potherca/Dark-Helmet/
 
 [Codacy Badge]: https://www.codacy.com/project/badge/ceaf9c9d7f0449fdb3df0c4753c48906
 [License Badge]: https://img.shields.io/badge/License-GPL3%2B-lightgray.svg
 [Project Stage Badge: Development]: http://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
+[Scrutinizer Badge]: http://img.shields.io/scrutinizer/g/potherca/Dark-Helmet.svg
