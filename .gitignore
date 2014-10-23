@@ -1,7 +1,10 @@
 # Ignore 3rd-party folder. Anything in it should be managed through a subtree.
 3rd-party
+vendor
 
 # Personal Settings
 settings.xml
 credentials.xml
 Predefined.tags.json
+
+phpunit.xm

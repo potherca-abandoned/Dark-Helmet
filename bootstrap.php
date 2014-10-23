@@ -15,7 +15,7 @@ define('LOGS_DIR',      PROJECT_DIR . 'logs/');
 define('TEMPLATE_DIR',  PROJECT_DIR . 'lib/Templates/');
 define('CONFIG_DIR',	PROJECT_DIR . 'conf/');
 
-require '3rd-party/PHPTAL/classes/PHPTAL.php'; // Template Autoloader
+require 'vendor/autoload.php';
 
 spl_autoload_register(
 	function($p_sFullyQualifiedClassName){
@@ -25,7 +25,7 @@ spl_autoload_register(
 			$sClassName = substr($sFullClassName, strrpos($sFullClassName, '/')+1);
 			$sNameSpace = substr($sFullClassName, strlen('DarkHelmet'), -strlen($sClassName));
 
-			if(strpos($sClassName,'Exception') !== false){
+			if (strpos($sClassName, 'Exception') !== false) {
 				$sClassName = 'Exceptions';
 			}
 
