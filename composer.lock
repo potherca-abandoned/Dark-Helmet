@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d966360546b59f885d7c2873e542580e",
+    "hash": "b7b234546909f571dd421f9df9b9b801",
     "packages": [
         {
             "name": "phptal/phptal",
