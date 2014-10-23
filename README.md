@@ -1,6 +1,10 @@
 # Once upon a time warp in deep space, the struggle between the nice & the rotten goes on...
 
 [![Build Status][build_status_img]][build_status]
+[![Project Stage Badge: Development]][Project Stage Page]
+[![Codacy Badge]][Codacy Page]
+[![License Badge]][GPL3+]
+
 
 Or to be more precise, the struggle between Those Who Want To Get Things Done & Those Who Want To Know How Long It Took Them...
 
@@ -27,6 +31,11 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 
 
 
+[Project Stage Page]: http://bl.ocks.org/potherca/raw/a2ae67caa3863a299ba0/
+[Releases Page]: /releases/
+[Codacy Page]: https://www.codacy.com/public/potherca/Dark-Helmet.git
+[GPL3+]: LICENSE
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/potherca/dark-helmet/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
+[Codacy Badge]: https://www.codacy.com/project/badge/ceaf9c9d7f0449fdb3df0c4753c48906
+[License Badge]: https://img.shields.io/badge/License-GPL3%2B-lightgray.svg
+[Project Stage Badge: Development]: http://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
