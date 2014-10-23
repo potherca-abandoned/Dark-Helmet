@@ -1,7 +1,7 @@
 {
     "name": "potherca/dark-helmet",
     "description": "Tag based Time tracker, expandable through plugin architecture.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "homepage": "https://github.com/potherca/Dark-Helmet",
     "license": "GPL-3.0+",
     "authors": [
