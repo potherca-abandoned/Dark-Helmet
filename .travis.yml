@@ -10,6 +10,7 @@ php:
 before_script:
     - composer self-update
     - composer update
+    - touch coveralls-upload.json && chmod 777 coveralls-upload.json
 
 script: php ./vendor/bin/phpunit
 
