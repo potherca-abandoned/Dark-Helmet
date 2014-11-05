@@ -1,10 +1,11 @@
 # Once upon a time warp in deep space, the struggle between the nice & the rotten goes on...
 
-[![Build Status][build_status_img]][build_status]
+[![Build Status][Build Status Badge]][Travis Page]
 [![Project Stage Badge: Development]][Project Stage Page]
 [![Scrutinizer Badge]][Code Quality Page]
 [![Codacy Badge]][Codacy Page]
 [![Coverage Status Badge]][Coveralls Page]
+[![Insight Badge]][Insight Page]
 [![License Badge]][GPL3+]
 
 
@@ -28,20 +29,22 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 ![Dark Helmet][dark_helmet_img]
 
 [dark_helmet_img]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"
-[build_status]: http://travis-ci.org/potherca/Dark-Helmet "Current Build Status"
-[build_status_img]: https://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
+[Travis Page]: http://travis-ci.org/potherca/Dark-Helmet "Current Build Status"
+[Build Status Badge]: https://travis-ci.org/potherca/Dark-Helmet.png?branch=master "Current Build Status"
 
 
-
-[Project Stage Page]: http://bl.ocks.org/potherca/raw/a2ae67caa3863a299ba0/
-[Releases Page]: /releases/
-[Codacy Page]: https://www.codacy.com/public/potherca/Dark-Helmet.git
 [GPL3+]: LICENSE
-[Code Quality Page]: https://scrutinizer-ci.com/g/potherca/Dark-Helmet/
-[Coveralls Page]: https://coveralls.io/r/potherca/Dark-Helmet
+[Releases Page]: /releases/
 
 [Codacy Badge]: https://www.codacy.com/project/badge/ceaf9c9d7f0449fdb3df0c4753c48906
+[Coverage Status Badge]: https://img.shields.io/coveralls/potherca/Dark-Helmet.svg
+[Insight Badge]: https://insight.sensiolabs.com/projects/162c8d10-3802-410e-b36b-6f5eb9837b23/mini.png
 [License Badge]: https://img.shields.io/badge/License-GPL3%2B-lightgray.svg
 [Project Stage Badge: Development]: http://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
 [Scrutinizer Badge]: http://img.shields.io/scrutinizer/g/potherca/Dark-Helmet.svg
-[Coverage Status Badge]: https://img.shields.io/coveralls/potherca/Dark-Helmet.svg
+
+[Codacy Page]: https://www.codacy.com/public/potherca/Dark-Helmet.git
+[Code Quality Page]: https://scrutinizer-ci.com/g/potherca/Dark-Helmet/
+[Coveralls Page]: https://coveralls.io/r/potherca/Dark-Helmet
+[Insight Page]: https://insight.sensiolabs.com/projects/162c8d10-3802-410e-b36b-6f5eb9837b23
+[Project Stage Page]: http://bl.ocks.org/potherca/raw/a2ae67caa3863a299ba0/
