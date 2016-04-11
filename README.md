@@ -38,7 +38,7 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 
 [Codacy Badge]: https://www.codacy.com/project/badge/ceaf9c9d7f0449fdb3df0c4753c48906
 [Coverage Status Badge]: https://img.shields.io/coveralls/potherca/Dark-Helmet.svg
-[Insight Badge]: https://insight.sensiolabs.com/projects/162c8d10-3802-410e-b36b-6f5eb9837b23/mini.png
+[Insight Badge]: https://img.shields.io/sensiolabs/i/162c8d10-3802-410e-b36b-6f5eb9837b23.svg
 [License Badge]: https://img.shields.io/badge/License-GPL3%2B-lightgray.svg
 [Project Stage Badge: Development]: http://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
 [Scrutinizer Badge]: http://img.shields.io/scrutinizer/g/potherca/Dark-Helmet.svg
