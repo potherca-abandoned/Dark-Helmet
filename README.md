@@ -30,7 +30,7 @@ For the sake of portability (i.e. switching tools), it doesn't allow you to add 
 
 [dark_helmet_img]: https://github.com/potherca/Dark-Helmet/raw/master/dark_helmet.jpg  "I am your father's brother's nephew's cousin's former roommate!"
 [Travis Page]: http://travis-ci.org/Potherca/Dark-Helmet "Current Build Status"
-[Build Status Badge]: https://travis-ci.org/Potherca/Dark-Helmet.png?branch=master "Current Build Status"
+[Build Status Badge]: https://img.shields.io/travis/Potherca/Dark-Helmet.svg "Current Build Status"
 
 
 [GPL3+]: LICENSE
