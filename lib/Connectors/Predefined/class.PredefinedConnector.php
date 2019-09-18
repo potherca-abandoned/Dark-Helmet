@@ -16,10 +16,10 @@ namespace DarkHelmet\Connectors\Predefined
 		{
 			$aParsedTags = $p_aTags;
 			$aPrefixes = $p_oContext->get('aPrefix');
-			$sFilePath = $this->getParam('TagFilePath');
-			
+			$sFilePath = PROJECT_DIR.$this->getParam('TagFilePath');
+
 			if(!is_file($sFilePath) || !is_readable($sFilePath)){
-				$aParsedTags[] = array(Tags::tagArray($p_oContext, '__ERROR__', 'Could not read predefined tags file.', ''));
+				$aParsedTags[] = array(Tags::tagArray($p_oContext, '__ERROR__', 'Could not read predefined tags file "'.$sFilePath.'"', ''));
 			}
 			else
 			{

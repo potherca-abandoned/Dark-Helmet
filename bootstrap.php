@@ -10,10 +10,10 @@ set_error_handler(
 	}
 );
 
-define('PROJECT_DIR',   realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-define('LOGS_DIR',      PROJECT_DIR . 'logs/');
-define('TEMPLATE_DIR',  PROJECT_DIR . 'lib/Templates/');
-define('CONFIG_DIR',	PROJECT_DIR . 'conf/');
+define('PROJECT_DIR',   __DIR__ . DIRECTORY_SEPARATOR);
+define('LOGS_DIR',      __DIR__ . '/logs/');
+define('TEMPLATE_DIR',  __DIR__ . '/lib/Templates/');
+define('CONFIG_DIR',    __DIR__ . '/conf/');
 
 require 'vendor/autoload.php';
 

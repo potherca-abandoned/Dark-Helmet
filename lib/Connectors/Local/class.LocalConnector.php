@@ -152,7 +152,7 @@ namespace DarkHelmet\Connectors\Local
 			#------------------------------------------------------------------#
 			// How many days of log to put reference in the history and show on the page
 			$iGoBack = $this->getParam('History');
-			$sLogsDir = $this->getParam('LogsDir');
+			$sLogsDir = PROJECT_DIR.$this->getParam('LogsDir');
 
 //			else if($p_oContext->get('sDate') !== $p_oContext->get('sToday') && !array_key_exists($p_oContext->get('sDate'), $this->m_aHistoryList)){
 //				throw new \InvalidArgumentException('Could not find log for date "' . $p_oContext->get('sDate') . '"');
@@ -160,7 +160,7 @@ namespace DarkHelmet\Connectors\Local
 
 			$oToday = $p_oContext->getDate();
 			$oFirstDate = new \DateTime(sprintf('-%d days midnight', $iGoBack));
-			
+
 			$aTags = array();
 
 			/*
@@ -173,7 +173,7 @@ namespace DarkHelmet\Connectors\Local
 			foreach($oPeriod as $t_oDate) {
 				/** @var $t_oDate DateTime */
 				$sLogFile = $this->m_sFilePrefix . $t_oDate->format('Ymd') . $this->m_sFileSuffix;
-				
+
 				if(is_readable($sLogsDir . $sLogFile)) {
 					// File is readable (and therefore does exists)
 					$t_aContent = file($sLogsDir . $sLogFile, FILE_IGNORE_NEW_LINES);
@@ -253,8 +253,8 @@ namespace DarkHelmet\Connectors\Local
 //////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		protected function filePathForTimeLog(TimeLog $p_oLogFile)
 		{
-			$sFilePath =
-				  $this->getParam('LogsDir')
+			$sFilePath =PROJECT_DIR
+				. $this->getParam('LogsDir')
 				. $this->m_sFilePrefix
 				. $p_oLogFile->getDate()->format('Ymd')
 				. $this->m_sFileSuffix
@@ -276,7 +276,7 @@ namespace DarkHelmet\Connectors\Local
 					touch($sFilePath);
 				}
 			}
-			
+
 			// Now the file exists, validate we have write access to it
 			if(!is_writable($sFilePath)) {
 				throw new Exception(sprintf('The log file "%s" is not writable!', $sFilePath));
