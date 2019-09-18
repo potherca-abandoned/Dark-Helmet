@@ -12,7 +12,7 @@ set_error_handler(
 
 define('PROJECT_DIR',   __DIR__ . DIRECTORY_SEPARATOR);
 define('LOGS_DIR',      __DIR__ . '/logs/');
-define('TEMPLATE_DIR',  __DIR__ . '/lib/Templates/');
+define('TEMPLATE_DIR',  __DIR__ . '/src/Templates/');
 define('CONFIG_DIR',    __DIR__ . '/conf/');
 
 require 'vendor/autoload.php';
