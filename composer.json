@@ -1,26 +1,24 @@
 {
     "name": "potherca/dark-helmet",
     "description": "Tag based Time tracker, expandable through plugin architecture.",
-    "version": "0.0.2",
     "homepage": "https://github.com/potherca/Dark-Helmet",
-    "license": "GPL-3.0+",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Potherca",
             "email": "potherca@gmail.com",
-            "homepage": "http://pother.ca/",
+            "homepage": "https://pother.ca/",
             "role": "Kick-Ass Web Developer!"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
-        "php": ">=5.3.0",
+        "php": "^7.0",
         "ext-openssl": "*",
-        "phptal/phptal" : "1.3.*"
+        "phptal/phptal" : "^1.4"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master",
-        "phpunit/phpunit": "4.*"
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
