@@ -3,9 +3,9 @@
 namespace DarkHelmet\Connectors
 {
 	use DarkHelmet\Core\Exception;
-	use DarkHelmet\Core\Object;
+	use DarkHelmet\Core\AbstractObject;
 
-	abstract class Base extends Object{
+	abstract class Base extends AbstractObject {
 
 ////////////////////////////////// Properties \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		private $m_aParams = array();

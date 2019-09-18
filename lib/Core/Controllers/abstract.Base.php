@@ -7,7 +7,7 @@ namespace DarkHelmet\Core\Controllers
 	use DarkHelmet\Core\Context;
 	use DarkHelmet\Core\Exception;
 	use DarkHelmet\Core\LogEntry;
-	use DarkHelmet\Core\Object;
+	use DarkHelmet\Core\AbstractObject;
 	use DarkHelmet\Core\Request;
 	use DarkHelmet\Core\Settings;
 	use DarkHelmet\Core\Template;
@@ -78,7 +78,7 @@ namespace DarkHelmet\Core\Controllers
 	 * The location could be an XPath for DOM or a regexp for string content.
 	 */
 
-	abstract class Base extends Object {
+	abstract class Base extends AbstractObject {
 ////////////////////////////////// Properties \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		protected $m_oSettings;
 		protected $m_oTimeLog;
@@ -154,7 +154,7 @@ namespace DarkHelmet\Core\Controllers
 			$this->m_oTimeLog = new TimeLog();
 			$this->m_oContext = new Context();
 		}
-		
+
 		final static public function getResponse(Request $p_oRequest, Settings $p_oSettings)
 		{
 
@@ -219,7 +219,7 @@ namespace DarkHelmet\Core\Controllers
                     );
                 }
 			}#try
-			
+
 			//@TODO: This can be cleaned up by using a response object instead of plain strings!
 			$sOutput = $oInstance->buildOutput();
 			if(isset($oInstance->m_sRedirectUrl)){
@@ -355,7 +355,7 @@ namespace DarkHelmet\Core\Controllers
 				$aParameters = array($aParameters);
 			}
 
-			if($sCall === false){
+			if($sCall === false || $sCall === ''){
 				$sCall = 'home';
 			}#if
 
@@ -367,7 +367,7 @@ namespace DarkHelmet\Core\Controllers
 			} catch(\Exception $ex) {
 				throw new Exception('404 - ' . $sCall);
 			}
-			
+
 			if(! $oReflector->isInstantiable()) {
 				throw new Exception('404 - ' . $sCall);
 			}
@@ -421,7 +421,6 @@ namespace DarkHelmet\Core\Controllers
 		{
 			//@FIXME: the m_aTags property is only available in an extending class!
 			$aTags = $this->array_unique_multi($this->m_aTags);
-
 			if ($this->getContext()->offsetExists('sMessage')) {
 				$sMessage = $this->getContext()->get('sMessage');
 				if (!empty($sMessage)) {
@@ -436,32 +435,34 @@ namespace DarkHelmet\Core\Controllers
 
 			// Sanitize Tags
 			foreach ($aTags as $t_iIndex => $t_aTag) {
-				$aTags[$t_iIndex]['caption'] = $this->sanitizeText($t_aTag['caption']);
-				$aTags[$t_iIndex]['value'] = $this->sanitizeText($t_aTag['value']);
+				if (isset($t_aTag['caption'], $t_aTag['value'])) {
+					$aTags[$t_iIndex]['caption'] = $this->sanitizeText($t_aTag['caption']);
+					$aTags[$t_iIndex]['value'] = $this->sanitizeText($t_aTag['value']);
+				}
 			}
-			
+
 			return $aTags;
 		}
-		
+
 		/**
 		 * Converts the input string into a string that is safe to use in html / json
-		 * 
+		 *
 		 * @TODO: Improve this method. Maybe use different methods for caption and value? // AK - 2012-06-05
-		 * 
+		 *
 		 * @param string $p_sInput
-		 * 
-		 * @return string 
+		 *
+		 * @return string
 		 */
 		protected function sanitizeText($p_sInput)
 		{
 			$sResult = $p_sInput;
-			
+
 			// Single quotes seem to cause the browser to hang or respond very slowly.
 			$sResult = str_replace("'", '`', $sResult);
 			// Double quotes cause invalid html, resulting in parts of the string missing.
 			// This solution is not perfect, it hampers search methods.
 			$sResult = str_replace('"', '&quot;', $sResult);
-			
+
 			return $sResult;
 		}
 

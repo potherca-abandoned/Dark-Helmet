@@ -8,7 +8,7 @@
  */
 namespace DarkHelmet\Core
 {
-    abstract class Object {
+    abstract class AbstractObject {
         public function getShortName(){
 			return substr(get_called_class(), strrpos(get_called_class(), '\\')+1);
         }
